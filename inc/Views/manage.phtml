@@ -1,0 +1,531 @@
+<!-- Récupération des données en PHP -->
+<?php
+
+$translate = $this->getParam('translate');
+
+$userID = $this->getParam('userID');
+$nompre = $this->getParam('nompre');
+$mainRule = $this->getParam('mainRule');
+$dataRule = $this->getParam('dataRule');
+$admin = $this->getParam('admin');
+
+$dataList = $this->getParam('dataList');
+$translateData = $this->getParam('translateData');
+$translateDataCategory = $this->getParam('translateDataCategory');
+
+$appList = $this->getParam('appList');
+$translateApp = $this->getParam('translateApp');
+
+$mainRuleList = $this->getParam('mainRuleList');
+$translateMainRule = $this->getParam('translateMainRule');
+
+$moldStatusList = $this->getParam('moldStatusList');
+$translateStatusList = $this->getParam('translateStatusList');
+
+
+
+$codeStatusList = $this->getParam('codeStatusList');
+
+
+// var_dump($translate);
+
+// var_dump($userID);
+// var_dump($nompre);
+// var_dump($mainRule);
+// var_dump($dataRule);
+// var_dump($admin);
+
+// var_dump($dataList);
+// var_dump($translateData);
+// var_dump($translateDataCategory);
+
+// var_dump($appList);
+// var_dump($translateApp);
+
+// var_dump($mainRuleList);
+// var_dump($translateMainRule);
+
+// var_dump($moldStatusList);
+// var_dump($translateStatusList);
+
+
+
+// var_dump($codeStatusList);
+
+?>
+
+
+
+<!-- Feuille de style CSS de la page -->
+<style type="text/css">
+  .title {
+    font-weight: bold;
+  }
+
+  .full {
+    width: 100%;
+  }
+
+  .middle {
+    text-align: center !important;
+  }
+
+  .mdl-radio__inner-circle {
+    background: #0817e6;
+  }
+
+  .mdl-switch.is-checked .mdl-switch__thumb {
+    background: #0817e6;
+  }
+
+  .mdl-switch.is-checked .mdl-switch__track {
+    background: #9494fa;
+  }
+
+  .mdl-switch__thumb {
+    background: #b31a1a;
+  }
+
+  .mdl-switch__track {
+    background: #e27435;
+  }
+
+  .mdl-icon-toggle.is-checked .mdl-icon-toggle__label {
+    color: #08fa08;
+  }
+
+  .mdl-icon-toggle__label {
+    color: #fd0606;
+  }
+
+  form .mdl-card {
+    text-align: left;
+  }
+
+  .centered {
+    margin: 0 auto;
+    display: flex;
+    width: auto;
+  }
+
+  .center-switch {
+    margin-right: 50px;
+  }
+
+  .goodyear-color--light-text {
+    color: #2150af !important;
+  }
+</style>
+
+
+
+<!-- Page Principal -->
+<div class="mdl-grid full">
+  <div class="mdl-cell mdl-cell--1-col"></div>
+  <!-- L'ensemble des configuration par rapport à l'application -->
+  <div class="mdl-cell mdl-cell--10-col">
+    <form id="configForm" method="POST" action="/auth/changeSettings">
+      <div class=" mdl-card mdl-shadow--8dp full">
+        <!-- Nom de l'utilisateur avec son panel de configuration -->
+        <div class="mdl-card__title goodyear-color--light goodyear-color-text">
+          <h6 class="mdl-card__title-text title"><?= $this->getVerifyTranslate($translate, 'mainTitle') . $nompre ?></h6>
+        </div>
+
+        <!-- Liste des applications avec leurs droits respectifs -->
+        <div class="mdl-card__supporting-text mdl-grid">
+          <!-- Ajout d'un input pour l'identifiant utilisateur -->
+          <input name="userid" value=<?= $userID ?> hidden>
+
+          <!-- Gestion du mot de passe utilisateur -->
+          <div class="mdl-cell mdl-cell--6-col">
+            <div class=" mdl-card mdl-shadow--8dp full">
+              <!-- Titre pour changer son mot de passe -->
+              <div class="mdl-card__title goodyear-color--light goodyear-color-text">
+                <h6 class="mdl-card__title-text title"><?= $this->getVerifyTranslate($translate, 'passwordChangeTitle') ?></h6>
+              </div>
+
+              <!-- Barre de saisi pour le mot de passe -->
+              <div class="mdl-card__supporting-text mdl-grid">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--12-col">
+                  <input class="mdl-textfield__input" type="password" id="password" name="password">
+                  <label class="mdl-textfield__label" for="password"><?= $this->getVerifyTranslate($translate, 'passwordChangeText') ?></label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gestion du nom de l'utilisateur -->
+          <div class="mdl-cell mdl-cell--3-col">
+            <div class=" mdl-card mdl-shadow--8dp full">
+              <!-- Titre pour changer son nom -->
+              <div class="mdl-card__title goodyear-color--light goodyear-color-text">
+                <h6 class="mdl-card__title-text title"><?= $this->getVerifyTranslate($translate, 'nomChangeTitle') ?></h6>
+              </div>
+
+              <!-- Barre de saisi pour le nom -->
+              <div class="mdl-card__supporting-text mdl-grid">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--12-col">
+                  <input class="mdl-textfield__input" type="text" id="nom" name="nom" value="<?= explode(' ', $nompre)[0] ?>" <?= frontController::haveRight('admin', 'ALL') ? '' : 'disabled' ?>>
+                  <label class="mdl-textfield__label" for="nom"><?= $this->getVerifyTranslate($translate, 'nomChangeTitle') ?></label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gestion du prénom de l'utilisateur -->
+          <div class="mdl-cell mdl-cell--3-col">
+            <div class=" mdl-card mdl-shadow--8dp full">
+              <!-- Titre pour changer son prénom -->
+              <div class="mdl-card__title goodyear-color--light goodyear-color-text">
+                <h6 class="mdl-card__title-text title"><?= $this->getVerifyTranslate($translate, 'prenomChangeTitle') ?></h6>
+              </div>
+
+              <!-- Barre de saisi pour le prénom -->
+              <div class="mdl-card__supporting-text mdl-grid">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--12-col">
+                  <input class="mdl-textfield__input" type="text" id="prenom" name="prenom" value="<?= explode(' ', $nompre)[1] ?>" <?= frontController::haveRight('admin', 'ALL') ? '' : 'disabled' ?>>
+                  <label class="mdl-textfield__label" for="prenom"><?= $this->getVerifyTranslate($translate, 'prenomChangeTitle') ?></label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gestion des préférences utilisateurs -->
+          <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect mdl-cell mdl-cell--12-col">
+            <!-- Liste des onglets pour chaque application -->
+            <div class="mdl-tabs__tab-bar">
+              <?php foreach ($appList as $appBaseName => $app) : ?>
+                <a href="#<?= $appBaseName ?>" class="mdl-tabs__tab"><?= $this->getVerifyTranslate($translateApp, $app['name']) ?></a>
+              <?php endforeach; ?>
+            </div>
+
+            <!-- Liste des informations sur le compte pour chaque application -->
+            <?php foreach ($appList as $appBaseName => $app) : ?>
+              <div class="mdl-tabs__panel" id="<?= $appBaseName ?>">
+                <div class="mdl-grid">
+                  <!-- Affichage des droits principaux si on est administrateur -->
+                  <?php if (frontController::haveRight('moderator', $appBaseName)) : ?>
+                    <div class="mdl-cell mdl-cell--12-col">
+                      <div class=" mdl-card mdl-shadow--8dp full">
+                        <!-- Titre pour changer ses droits principaux -->
+                        <div class="mdl-card__title goodyear-color--light goodyear-color-text">
+                          <h6 class="mdl-card__title-text title"><?= $this->getVerifyTranslate($translate, 'mainRuleTitle') ?></h6>
+                        </div>
+
+                        <!-- Liste des droits principaux -->
+                        <div class="mdl-card__supporting-text mdl-grid">
+                          <div class="centered">
+                            <?php foreach ($mainRuleList as $ruleBaseName => $rule) : ?>
+                              <!-- Toggle pour les droits -->
+                              <?php if ($ruleBaseName != 'admin' and $ruleBaseName != 'moderator') : ?>
+                                <label id="toggle-<?= $appBaseName ?>-<?= $ruleBaseName ?>-ACTION" class="center-switch mdl-switch mdl-js-switch mdl-js-ripple-effect mdl-cell mdl-cell--3-col" for="switch-<?= $appBaseName ?>-<?= $ruleBaseName ?>-ACTION">
+                                  <input type="checkbox" id="switch-<?= $appBaseName ?>-<?= $ruleBaseName ?>-ACTION" name="mainRule[<?= $appBaseName ?>][<?= $ruleBaseName ?>]" class="mdl-switch__input toggle-search" <?= frontController::userHaveRight($ruleBaseName, $appBaseName, $mainRule) ? 'checked' : '' ?>>
+                                  <span id="span-<?= $appBaseName ?>-<?= $ruleBaseName ?>-ACTION" class="mdl-switch__label"><?= $this->getVerifyTranslate($translateMainRule, $rule['name']) ?></span>
+                                  <div class="mdl-tooltip" for="span-<?= $appBaseName ?>-<?= $ruleBaseName ?>-ACTION"><?= $this->getVerifyTranslate($translateMainRule, $mainRuleList[$ruleBaseName]['description']) ?></div>
+                                </label>
+                              <?php endif; ?>
+                            <?php endforeach; ?>
+                          </div>
+                        </div>
+
+                        <!-- Toggle pour le droit modérateur -->
+                        <div class="mdl-card__actions mdl-card--border" style="display: flex;">
+                          <div class="centered">
+                            <label id="toggle-<?= $appBaseName ?>-moderator" class="center-switch mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-<?= $appBaseName ?>-moderator">
+                              <input type="checkbox" id="switch-<?= $appBaseName ?>-moderator" name="mainRule[<?= $appBaseName ?>][moderator]" class="mdl-switch__input toggle-search" <?= frontController::userHaveRight('moderator', $appBaseName, $mainRule) ? 'checked' : '' ?>>
+                              <span id="span-<?= $appBaseName ?>-moderator" class="mdl-switch__label"><?= $this->getVerifyTranslate($translateMainRule, $mainRuleList['moderator']['name']) ?></span>
+                              <div class="mdl-tooltip" for="span-<?= $appBaseName ?>-moderator"><?= $this->getVerifyTranslate($translateMainRule, $mainRuleList['moderator']['description']) ?></div>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  <?php endif; ?>
+
+                  <!-- Affichage des statuts disponibles pour le système de trie si application des moules -->
+                  <?php if ($appBaseName == 'Mold_App') : ?>
+                    <div class="mdl-cell mdl-cell--12-col">
+                      <div class=" mdl-card mdl-shadow--8dp full">
+                        <!-- Titre des droits sur le filtre -->
+                        <div class="mdl-card__title goodyear-color--light goodyear-color-text">
+                          <h6 class="mdl-card__title-text title"><?= $this->getVerifyTranslate($translate, 'sortTitle') ?></h6>
+                        </div>
+
+                        <!-- Chaque filtre -->
+                        <div class="mdl-card__supporting-text mdl-grid">
+                          <?php foreach ($moldStatusList as $key => $moldStatusData) : ?>
+                            <?php if (isset($dataRule[$appBaseName]['FILTER'][$moldStatusData['STATUS_MOULE']]) or frontController::haveRight('moderator', $appBaseName)) : ?>
+                              <div class="mdl-cell mdl-cell--3-col">
+                                <div class=" mdl-card mdl-shadow--8dp full">
+                                  <!-- Titre du filtre -->
+                                  <div class="mdl-card__title goodyear-color--light goodyear-color-text">
+                                    <h6 class="mdl-card__title-text title"><?= $this->getVerifyTranslate($translateStatusList, $moldStatusData['STATUS_MOULE']) ?></h6>
+                                  </div>
+
+                                  <!-- Description du filtre -->
+                                  <div class="mdl-card__supporting-text">
+                                    <p style="border-style: double; border-color: #<?= $moldStatusData['COLOR'] ?>;"><?= $this->getVerifyTranslate($translateStatusList, $moldStatusData['STATUS_MOULE'] . 'Description') ?></p>
+                                  </div>
+
+                                  <!-- Action sur le filtre -->
+                                  <div class="mdl-card__menu" style="right: 0px; top: 0px; text-align: right;">
+                                    <div class="mdl-grid">
+                                      <div class="mdl-cell mdl-cell--6-col">
+                                        <!-- Toggle pour activer le filtre par défaut -->
+                                        <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="switch-Mold_App-<?= $moldStatusData['STATUS_MOULE'] ?>-FILTER-ACTIVED-DEFAULT">
+                                          <input type="checkbox" id="switch-Mold_App-<?= $moldStatusData['STATUS_MOULE'] ?>-FILTER-ACTIVED-DEFAULT" name="filterDefault[Mold_App][FILTER][<?= $moldStatusData['STATUS_MOULE'] ?>]" class="activate-default mdl-icon-toggle__input" <?= isset($dataRule['Mold_App']['FILTER'][$moldStatusData['STATUS_MOULE']]['default']) ? 'checked' : '' ?>>
+                                          <i class="mdl-icon-toggle__label material-icons <?= isset($dataRule['Mold_App']['FILTER'][$moldStatusData['STATUS_MOULE']]) ? '' : 'goodyear-color--light-text' ?>">power_settings_new</i>
+                                        </label>
+                                      </div>
+
+                                      <div class="mdl-cell mdl-cell--6-col">
+                                        <!-- Toggle pour activer le filtre -->
+                                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect <?= frontController::haveRight('moderator', $appBaseName) ? '' : 'hidden' ?>" for="switch-Mold_App-<?= $moldStatusData['STATUS_MOULE'] ?>-FILTER-ACTIVED">
+                                          <input type="checkbox" id="switch-Mold_App-<?= $moldStatusData['STATUS_MOULE'] ?>-FILTER-ACTIVED" name="filterActivated[Mold_App][FILTER][<?= $moldStatusData['STATUS_MOULE'] ?>]" class="activate-filter mdl-switch__input" <?= isset($dataRule['Mold_App']['FILTER'][$moldStatusData['STATUS_MOULE']]) ? 'checked' : '' ?>>
+                                        </label>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            <?php endif; ?>
+                          <?php endforeach; ?>
+                        </div>
+                      </div>
+                    </div>
+                  <?php endif; ?>
+
+                  <!-- Affichage des statuts disponibles pour le système de trie si application des codes -->
+                  <?php if ($appBaseName == 'Code_App') : ?>
+                    <div class="mdl-cell mdl-cell--12-col">
+                      <div class=" mdl-card mdl-shadow--8dp full">
+                        <!-- Titre des droits sur le filtre -->
+                        <div class="mdl-card__title goodyear-color--light goodyear-color-text">
+                          <h6 class="mdl-card__title-text title"><?= $this->getVerifyTranslate($translate, 'sortTitle') ?></h6>
+                        </div>
+
+                        <!-- Chaque filtre -->
+                        <div class="mdl-card__supporting-text mdl-grid">
+                          <?php foreach ($codeStatusList as $codeStatusName => $codeStatusColor) : ?>
+                            <?php if (isset($dataRule[$appBaseName]['FILTER'][$codeStatusName]) or frontController::haveRight('moderator', $appBaseName)) : ?>
+                              <div class="mdl-cell mdl-cell--3-col">
+                                <div class=" mdl-card mdl-shadow--8dp full">
+                                  <!-- Titre du filtre -->
+                                  <div class="mdl-card__title goodyear-color--light goodyear-color-text">
+                                    <h6 class="mdl-card__title-text title"><?= $this->getVerifyTranslate($translateStatusList, $codeStatusName) ?></h6>
+                                  </div>
+
+                                  <!-- Description du filtre -->
+                                  <div class="mdl-card__supporting-text">
+                                    <p style="border-style: double; border-color: #<?= $codeStatusColor ?>;"><?= $this->getVerifyTranslate($translateStatusList, $codeStatusName . 'Description') ?></p>
+                                  </div>
+
+                                  <!-- Action sur le filtre -->
+                                  <div class="mdl-card__menu" style="right: 0px; top: 0px; text-align: right;">
+                                    <div class="mdl-grid">
+                                      <div class="mdl-cell mdl-cell--6-col">
+                                        <!-- Toggle pour activer le filtre par défaut -->
+                                        <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="switch-Code_App-<?= $codeStatusName ?>-FILTER-ACTIVED-DEFAULT">
+                                          <input type="checkbox" id="switch-Code_App-<?= $codeStatusName ?>-FILTER-ACTIVED-DEFAULT" name="filterDefault[Code_App][FILTER][<?= $codeStatusName ?>]" class="activate-default mdl-icon-toggle__input" <?= isset($dataRule['Code_App']['FILTER'][$codeStatusName]['default']) ? 'checked' : '' ?>>
+                                          <i class="mdl-icon-toggle__label material-icons <?= isset($dataRule['Code_App']['FILTER'][$codeStatusName]) ? '' : 'goodyear-color--light-text' ?>">power_settings_new</i>
+                                        </label>
+                                      </div>
+
+                                      <div class="mdl-cell mdl-cell--6-col">
+                                        <!-- Toggle pour activer le filtre -->
+                                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect <?= frontController::haveRight('moderator', $appBaseName) ? '' : 'hidden' ?>" for="switch-Code_App-<?= $codeStatusName ?>-FILTER-ACTIVED">
+                                          <input type="checkbox" id="switch-Code_App-<?= $codeStatusName ?>-FILTER-ACTIVED" name="filterActivated[Code_App][FILTER][<?= $codeStatusName ?>]" class="activate-filter mdl-switch__input" <?= isset($dataRule['Code_App']['FILTER'][$codeStatusName]) ? 'checked' : '' ?>>
+                                        </label>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            <?php endif; ?>
+                          <?php endforeach; ?>
+                        </div>
+                      </div>
+                    </div>
+                  <?php endif; ?>
+
+                  <!-- Affichage de l'ensemble des données -->
+                  <?php foreach ($dataList as $app => $data) : ?>
+                    <?php if ($app == $appBaseName) : ?>
+                      <?php foreach ($data as $dataBaseName => $info) : ?>
+                        <!-- Vérification que la visibilité est autorisé pour la donnée -->
+                        <?php if (isset($dataRule[$app][$dataBaseName]) or frontController::haveRight('moderator', $app)) : ?>
+                          <div class="mdl-cell mdl-cell--4-col">
+                            <div class=" mdl-card mdl-shadow--8dp full">
+                              <!-- Titre de la donnée -->
+                              <div class="mdl-card__title goodyear-color--light goodyear-color-text">
+                                <h6 class="mdl-card__title-text title"><?= $this->getVerifyTranslate($translateData, $info['name']) ?></h6>
+                              </div>
+
+                              <!-- Description de la donnée -->
+                              <div class="mdl-card__supporting-text mdl-grid">
+                                <p><?= $this->getVerifyTranslate($translateData, $info['description']) ?></p>
+                              </div>
+
+                              <!-- Formulaire de la donnée -->
+                              <div class="mdl-card__actions mdl-card--border">
+                                <div>
+                                  <!-- Radio pour la donnée -->
+                                  <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-more-<?= $app ?>-<?= $dataBaseName ?>">
+                                    <input type="radio" id="option-more-<?= $app ?>-<?= $dataBaseName ?>" class="mdl-radio__button radioMore" name="dataRulePrimary[<?= $app ?>][<?= $dataBaseName ?>]" value="1" <?= isset($dataRule[$app][$dataBaseName]['primary']) ? 'checked' : '' ?>>
+                                    <span class="mdl-radio__label"><?= $this->getVerifyTranslate($translate, 'moreRadioText') ?></span>
+                                  </label>
+
+                                  <!-- Toggle pour la recherche -->
+                                  <label id="toggle-<?= $app ?>-<?= $dataBaseName ?>" class="mdl-switch mdl-js-switch mdl-js-ripple-effect <?= isset($dataRule[$app][$dataBaseName]['primary']) ? '' : 'hidden' ?>" for="switch-<?= $app ?>-<?= $dataBaseName ?>">
+                                    <input type="checkbox" id="switch-<?= $app ?>-<?= $dataBaseName ?>" name="dataRuleSearch[<?= $app ?>][<?= $dataBaseName ?>]" class="mdl-switch__input toggle-search" <?= isset($dataRule[$app][$dataBaseName]['search']) ? 'checked' : '' ?>>
+                                    <span class="mdl-switch__label"><?= $this->getVerifyTranslate($translate, 'searchSystemText') ?></span>
+                                  </label>
+                                </div>
+
+                                <br />
+                                <!-- Radio pour la donnée -->
+                                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-less-<?= $app ?>-<?= $dataBaseName ?>">
+                                  <input type="radio" id="option-less-<?= $app ?>-<?= $dataBaseName ?>" class="mdl-radio__button radioLess" name="dataRulePrimary[<?= $app ?>][<?= $dataBaseName ?>]" value="2" <?= isset($dataRule[$app][$dataBaseName]['primary']) ? '' : 'checked' ?>>
+                                  <span class="mdl-radio__label"><?= $this->getVerifyTranslate($translate, 'lessRadioText') ?></span>
+                                </label>
+                              </div>
+
+                              <div class="mdl-card__menu" style="right: 0px; top: 0px; text-align: right;">
+                                <div class="mdl-grid">
+                                  <div class="mdl-cell mdl-cell--6-col">
+                                    <!-- Toggle pour activer l'édition sur la donnéee -->
+                                    <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect <?= frontController::haveRight('moderator', $app) ? (isset($dataRule[$app][$dataBaseName]) ? '' : 'goodyear-color--light-text') : 'hidden' ?>" for="switch-<?= $app ?>-<?= $dataBaseName ?>-ACTIVED-EDIT">
+                                      <input type="checkbox" id="switch-<?= $app ?>-<?= $dataBaseName ?>-ACTIVED-EDIT" name="dataRuleEdit[<?= $app ?>][<?= $dataBaseName ?>]" class="activate-edit mdl-icon-toggle__input" <?= isset($dataRule[$app][$dataBaseName]['edit']) ? 'checked' : '' ?>>
+                                      <i class="mdl-icon-toggle__label material-icons">edit</i>
+                                    </label>
+                                  </div>
+
+                                  <div class="mdl-cell mdl-cell--6-col">
+                                    <!-- Toggle pour activer la donnée -->
+                                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect <?= frontController::haveRight('moderator', $app) ? '' : 'hidden' ?>" for="switch-<?= $app ?>-<?= $dataBaseName ?>-ACTIVED">
+                                      <input type="checkbox" id="switch-<?= $app ?>-<?= $dataBaseName ?>-ACTIVED" name="dataRuleActivated[<?= $app ?>][<?= $dataBaseName ?>]" class="activate mdl-switch__input" <?= isset($dataRule[$app][$dataBaseName]) ? 'checked' : '' ?>>
+                                    </label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        <?php endif; ?>
+                      <?php endforeach; ?>
+                    <?php endif; ?>
+                  <?php endforeach; ?>
+                </div>
+              </div>
+            <?php endforeach; ?>
+          </div>
+        </div>
+
+        <!-- Checkbox admin et bouton de confirmation des préférences utilisateurs -->
+        <div class="mdl-card__actions mdl-card--border mdl-grid">
+          <?php if (frontController::haveRight('admin', 'ALL')) : ?>
+            <!-- Switch pour le système administrateur -->
+            <label id="toggle-admin" class="mdl-switch mdl-js-switch mdl-js-ripple-effect mdl-cell mdl-cell--10-col" for="switch-admin">
+              <input type="checkbox" id="switch-admin" name="mainRule[admin]" class="mdl-switch__input toggle-search" <?= frontController::userHaveRight('admin', 'ALL', $mainRule) ? 'checked' : '' ?>>
+              <span id="span-admin" class="mdl-switch__label"><?= $this->getVerifyTranslate($translateMainRule, $mainRuleList['admin']['name']) ?></span>
+              <div class="mdl-tooltip" for="span-admin"><?= $this->getVerifyTranslate($translateMainRule, $mainRuleList['admin']['description']) ?></div>
+            </label>
+          <?php else : ?>
+            <div class="mdl-cell mdl-cell--10-col"></div>
+          <?php endif; ?>
+
+          <!-- Bouton de sauvegarde -->
+          <button type="button" id="save" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--purple mdl-color-text--white mdl-cell mdl-cell--2-col close right">
+            <?= $this->getVerifyTranslate($translate, 'buttonSave') ?>
+          </button>
+          <div class="mdl-tooltip" for="save"><?= $this->getVerifyTranslate($translate, 'toolTipButtonSave') ?></div>
+        </div>
+
+        <!-- Affichage des boutons d'action en haut -->
+        <div class="mdl-card__menu">
+          <!-- Label avec l'identifiant utilisateur -->
+          <label class="title goodyear-color-text"><?= $userID ?></label>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="mdl-cell mdl-cell--1-col"></div>
+</div>
+
+
+
+<!-- Script JavaScript -->
+<script type="text/javascript">
+  // fonction qui permet de confirmer et envoyer le formulaire
+  function submitForm() {
+    // Réactivation des champs avant l'envoi
+    document.querySelector('#nom').disabled = false;
+    document.querySelector('#prenom').disabled = false;
+
+    // Envoi du formulaire
+    document.querySelector('#configForm').submit();
+  }
+
+
+
+  document.querySelector('#save').addEventListener('click', function() {
+    // Popup pour confirmer la sauvegarde des préférences
+    swal({
+      title: "<?= $translate['saveFormSuccessTitle'] ?>",
+      icon: "success",
+    }).then(function() {
+      if (document.querySelector('#password').value != '') {
+        swal({
+          title: "<?= $this->getVerifyTranslate($translate, 'passwordCautionTitle') ?>",
+          text: "<?= $this->getVerifyTranslate($translate, 'passwordCautionText') ?>",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+        }).then((value) => {
+          if (value) {
+            swal({
+              title: "<?= $this->getVerifyTranslate($translate, 'passwordCautionTitle') ?>",
+              icon: "success",
+            }).then(function() {
+              submitForm();
+            });
+          }
+        });
+      } else
+        submitForm();
+    });
+  });
+
+  // Disparition du toggle de recherche pour chaque application
+  document.querySelectorAll('.radioMore').forEach(function(radio) {
+    radio.addEventListener('click', function() {
+      document.querySelector('#toggle-' + radio.id.split('-')[2] + '-' + radio.id.split('-')[3]).classList.remove('hidden');
+    });
+  });
+
+  // Apparition du toggle de recherche pour chaque application
+  document.querySelectorAll('.radioLess').forEach(function(radio) {
+    radio.addEventListener('click', function() {
+      document.querySelector('#toggle-' + radio.id.split('-')[2] + '-' + radio.id.split('-')[3]).classList.add('hidden');
+    });
+  });
+
+  // Apparition et disparition du bouton d'édition
+  document.querySelectorAll('.activate').forEach(function(toggle) {
+    toggle.addEventListener('click', function() {
+      if (toggle.checked)
+        document.querySelector('#' + toggle.id + '-EDIT').parentElement.children[1].classList.remove('goodyear-color--light-text');
+      else
+        document.querySelector('#' + toggle.id + '-EDIT').parentElement.children[1].classList.add('goodyear-color--light-text');
+    });
+  });
+
+  // Apparition et disparition du bouton d'activation du filtre par défaut
+  document.querySelectorAll('.activate-filter').forEach(function(toggle) {
+    toggle.addEventListener('click', function() {
+      if (toggle.checked)
+        document.querySelector('#' + toggle.id + '-DEFAULT').parentElement.children[1].classList.remove('goodyear-color--light-text');
+      else
+        document.querySelector('#' + toggle.id + '-DEFAULT').parentElement.children[1].classList.add('goodyear-color--light-text');
+    });
+  });
+</script>

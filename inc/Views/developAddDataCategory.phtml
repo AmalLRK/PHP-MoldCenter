@@ -1,0 +1,73 @@
+<!-- Récupération des données en PHP -->
+<?php
+
+
+
+?>
+
+
+
+<!-- Feuille de style CSS de la page -->
+<style type="text/css">
+  .full {
+    width: 100%;
+  }
+
+  .middle {
+    text-align: center !important;
+  }
+
+  .title {
+    font-weight: bold;
+  }
+</style>
+
+
+
+<!-- Page Principal -->
+<div class="mdl-cell mdl-cell--3-col"></div>
+<div class="mdl-cell mdl-cell--6-col">
+  <div class="mdl-card mdl-shadow--8dp full">
+    <div class="mdl-card__title goodyear-color-text goodyear-color--light">
+      <h6 class="mdl-card__title-text title">Add Data Category</h6>
+    </div>
+
+    <div class="mdl-card__supporting-text">
+      <form class="mdl-grid" id="categoryForm" method="POST" action="/develop/addDataCategory">
+        <!-- Champ pour choisir le nom de la catégorie -->
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--10-col">
+          <input class="mdl-textfield__input" type="text" id="categoryName" name="categoryName">
+          <label class="mdl-textfield__label" for="categoryName">Category Name</label>
+        </div>
+
+        <!-- Champ pour choisir la couleur -->
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--2-col">
+          <input class="mdl-textfield__input" type="color" id="categoryColor" name="categoryColor">
+          <label class="mdl-textfield__label" for="categoryColor">Category Color</label>
+        </div>
+      </form>
+    </div>
+
+    <div class="mdl-card__actions mdl-card--border middle">
+      <!-- Bouton de sauvegarde -->
+      <button type="button" id="add" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--green mdl-color-text--white">
+        Add
+      </button>
+      <div class="mdl-tooltip" for="add">Add Data Category</div>
+    </div>
+  </div>
+</div>
+<div class="mdl-cell mdl-cell--3-col"></div>
+
+
+
+<!-- Script JavaScript -->
+<script type="text/javascript">
+  // Validation et envoi du formulaire
+  document.querySelector('#add').addEventListener('click', function() {
+    var form = document.querySelector('#categoryForm');
+
+    if (form.reportValidity())
+      form.submit();
+  });
+</script>

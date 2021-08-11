@@ -1,0 +1,50 @@
+<!-- Récupération des données en PHP -->
+<?php
+
+$linkList = $this->getParam('linkList');
+
+// var_dump($linkList);
+
+?>
+
+
+
+<!-- Feuille de style CSS de la page -->
+<style type="text/css">
+  .full {
+    width: 100%;
+  }
+
+  .middle {
+    text-align: center !important;
+  }
+
+  .title {
+    font-weight: bold;
+  }
+</style>
+
+
+
+<!-- Page Principal -->
+<?php foreach ($linkList as $categoryName => $dataList) : ?>
+<div class="mdl-cell mdl-cell--12-col">
+  <div class="mdl-card mdl-shadow--8dp full">
+    <div class="mdl-card__title goodyear-color-text goodyear-color--light">
+      <h6 class="mdl-card__title-text title"><?= $categoryName ?></h6>
+    </div>
+
+    <div class="mdl-card__actions mdl-card--border middle">
+      <?php foreach ($dataList as $linkName => $link) : ?>
+      <a href="/<?= $link ?>" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--purple mdl-color-text--white"><?= $linkName ?></a>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</div>
+<?php endforeach; ?>
+
+
+
+<!-- Script JavaScript -->
+<script type="text/javascript">
+</script>

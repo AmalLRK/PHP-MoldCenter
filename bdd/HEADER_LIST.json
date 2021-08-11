@@ -1,0 +1,10 @@
+{
+  "Mold_App": {
+    "moldHistory": "/history/view/Mold_App",
+    "moldAnalyse": "/mold/analyse"
+  },
+  "Code_App": {
+    "codeHistory": "/history/view/Code_App",
+    "codeAnalyse": "/code/analyse"
+  }
+}

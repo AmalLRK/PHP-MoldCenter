@@ -1,0 +1,179 @@
+<!-- Récupération des données en PHP -->
+<?php
+
+$table = $this->getParam('table');
+$tableName = $this->getParam('tableName');
+
+// var_dump($table);
+// var_dump($tableName);
+
+?>
+
+
+
+<!-- Chargement des librairies JS et de la feuille de style CSS pour la page -->
+<link rel="stylesheet" href="/js/TableSort/tablesort.css" />
+<script type="text/javascript" src="/js/TableSort/tablesort.min.js"></script>
+<script type="text/javascript" src="/js/TableSort/sorts/tablesort.number.min.js"></script>
+<script type="text/javascript" src="/js/jets.min.js"></script>
+
+
+
+<!-- Feuille de style CSS de la page -->
+<style type="text/css">
+  .full {
+    width: 100%;
+  }
+
+  .middle {
+    text-align: center !important;
+  }
+
+  .title {
+    font-weight: bold;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  .inner {
+    overflow-x: scroll;
+    overflow-y: visible;
+    width: 100%;
+  }
+</style>
+
+
+
+<!-- Page Principal -->
+<div class="mdl-cell mdl-cell--12-col">
+  <div class="mdl-card mdl-shadow--8dp full">
+    <div class="mdl-card__title goodyear-color-text goodyear-color--light">
+      <h6 class="mdl-card__title-text title"><?= $tableName ?></h6>
+
+      <!-- Système de recherche global -->
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable" style="padding: 0px; margin: auto;">
+        <label id="search_label" class="mdl-button mdl-js-button mdl-button--icon" style="top: 0px;" for="search">
+          <i class="material-icons goodyear-color-text">search</i>
+        </label>
+        <div class="mdl-tooltip" for="search_label">Global Search</div>
+        <div class="mdl-textfield__expandable-holder">
+          <input type="text" id="search" class="mdl-textfield__input goodyear-color-text" style="border-bottom-color: #FFDE00;">
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenu de la page -->
+    <div class="mdl-card__supporting-text mdl-grid">
+      <!-- Liste des champs de la table -->
+      <div class="mdl-cell mdl-cell--6-col">
+        <div class="mdl-card mdl-shadow--8dp full">
+          <div class="mdl-card__title goodyear-color-text goodyear-color--light">
+            <h6 class="mdl-card__title-text title">Table Column Name</h6>
+          </div>
+
+          <div class="mdl-card__supporting-text">
+            <ul class="mdl-list">
+              <?php foreach ($table[0] as $dataBaseName => $value) : ?>
+              <li class="mdl-list__item"><span class="mdl-list__item-primary-content"><?= $dataBaseName ?></span></li>
+              <?php endforeach; ?>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Statistique de la table -->
+      <div class="mdl-cell mdl-cell--6-col">
+        <div class="mdl-card mdl-shadow--8dp full">
+          <div class="mdl-card__title goodyear-color-text goodyear-color--light">
+            <h6 class="mdl-card__title-text title">Table Stats</h6>
+          </div>
+
+          <div class="mdl-card__supporting-text">
+            <ul class="mdl-list">
+              <li class="mdl-list__item"><span class="mdl-list__item-primary-content"><?='Row Count = ' . count($table) ?></span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tableau des utilisateur -->
+      <div class="mdl-cell mdl-cell--12-col inner">
+        <table id="dataTab" class="mdl-data-table mdl-js-data-table">
+          <!-- Entête du tableau -->
+          <thead>
+            <!-- Barres de recherche sélectives -->
+            <tr style="text-align = center;">
+              <?php foreach ($table[0] as $dataBaseName => $value) : ?>
+              <th class="goodyear-color--light" style="text-align: center;">
+                <!-- Système de recherche sélectif -->
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable" style="padding: 0px; margin: auto; width: 200px;">
+                  <label id="search_label-<?= $dataBaseName ?>" class="mdl-button mdl-js-button mdl-button--icon" style="top: 0px;" for="search-<?= $dataBaseName ?>">
+                    <i class="material-icons goodyear-color-text">search</i>
+                  </label>
+                  <div class="mdl-tooltip" for="search_label-<?= $dataBaseName ?>">Search</div>
+                  <div class="mdl-textfield__expandable-holder head-search">
+                    <input type="text" id="search-<?= $dataBaseName ?>" class="mdl-textfield__input goodyear-color-text" style="border-bottom-color: #FFDE00;">
+                  </div>
+                </div>
+              </th>
+              <?php endforeach; ?>
+            </tr>
+
+            <!-- Nom des colonnes -->
+            <tr>
+              <!-- Ajout des noms de chaque colonne -->
+              <?php foreach ($table[0] as $dataBaseName => $value) : ?>
+              <th class="mdl-data-table__cell--non-numeric goodyear-color--light goodyear-color-text middle"><?= $dataBaseName ?></th>
+              <?php endforeach; ?>
+            </tr>
+          </thead>
+
+          <!-- Contenu du tableau -->
+          <tbody id="content">
+            <!-- Affichage des données -->
+            <?php foreach ($table as $key => $data) : ?>
+            <tr>
+              <!-- Affichage de chaque ligne de données -->
+              <?php foreach ($data as $dataBaseName => $value) : ?>
+              <td class="mdl-data-table__cell--non-numeric middle"><?= strval($value) ?></td>
+              <?php endforeach; ?>
+            </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Script JavaScript -->
+<script type="text/javascript">
+  // Ajout du système de trie automatique du tableau
+  new Tablesort(document.querySelector('#dataTab'));
+
+
+
+  // Système de recherche sélectif -->
+  <?php foreach ($table[0] as $dataBaseName => $value) : ?>
+  new Jets({
+    searchTag: '#search-<?= $dataBaseName ?>',
+    contentTag: '#content'
+  });
+  <?php endforeach; ?>
+
+
+
+  // Système de recherche global
+  new Jets({
+    searchTag: '#search',
+    contentTag: '#content'
+  });
+</script>

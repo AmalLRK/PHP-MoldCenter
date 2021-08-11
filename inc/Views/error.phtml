@@ -1,0 +1,97 @@
+<style type="text/css">
+  .mdl-card__supporting-text {
+    width: calc(100% - 32px);
+  }
+
+  h5 {
+    font-size: 18px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse
+  }
+
+  table td,
+  table th {
+    padding: 7px 5px;
+  }
+
+  table thead td {
+    text-align: left;
+    font-weight: 200;
+    font-size: 24px;
+    background-color: #cecece;
+    padding: 15px;
+  }
+
+  pre {
+    display: block;
+    padding: 12px;
+    color: #F60;
+    background: #f5f5f5;
+    white-space: pre-wrap;
+  }
+</style>
+<div class="mdl-cell--2-col mdl-cell"></div>
+<div class="mdl-card mdl-cell mdl-cell--8-col mdl-shadow--2dp">
+  <div class="mdl-card__title mdl-color--blue-700 mdl-color-text--white">
+    <h6 class="mdl-card__title-text">Erreur</h6>
+  </div>
+  <div class="mdl-card__supporting-text">
+    <h5><?= $this->getParam('error')['message'] ?></h5>
+
+    <table border="1">
+      <thead>
+        <tr>
+          <td colspan="4">StackTrace</td>
+        </tr>
+        <tr>
+          <th>Ligne</th>
+          <th>Fonction</th>
+          <th>Fichier</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php foreach (array_reverse($this->getParam('error')['trace']) as $trace) : ?>
+          <tr>
+            <td><?= $trace['line'] ?></td>
+            <td><?= $trace['class'] . $trace['type'] . $trace['function'] ?>()</td>
+            <td><?= $trace['file'] ?></td>
+            <th>
+              <?php if ($trace['args']) : ?>
+                <a href="javascript:void(0);" data-args='<?= json_encode($trace['args'], JSON_HEX_APOS) ?>'>Args</a>
+              <?php endif; ?>
+            </th>
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  </div>
+</div>
+<dialog class="mdl-dialog" style="min-width:550px;top:0;">
+  <div class="mdl-dialog__content">
+
+  </div>
+  <div class="mdl-dialog__actions">
+    <button type="button" class="mdl-button mdl-js-button close">FERMER</button>
+  </div>
+</dialog>
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', () => {
+    const dialog = document.querySelector('.mdl-dialog');
+    const args = document.querySelectorAll('th a');
+    args.forEach((el) => {
+      let content = JSON.stringify(JSON.parse(el.dataset.args), null, ' ')
+      el.addEventListener('click', () => {
+        console.log(content.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+        document.querySelector('.mdl-dialog__content').innerHTML = '<pre>' + content.replace(/(?:\r\n|\r|\n)/g, '<br />') + '</pre>';
+        dialog.showModal();
+      });
+    });
+    dialog.querySelector('.close').addEventListener('click', () => {
+      dialog.close();
+    });
+  });
+</script>

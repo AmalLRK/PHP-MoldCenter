@@ -1,0 +1,105 @@
+<!-- Récupération des données en PHP -->
+<?php
+
+$ACTIVATED = $this->getParam('activated');
+
+// var_dump($ACTIVATED);
+
+?>
+
+
+
+<!-- Feuille de style CSS de la page -->
+<style type="text/css">
+  .middle {
+    text-align: center !important;
+  }
+
+  .title {
+    font-weight: bold;
+  }
+
+  .full {
+    width: 100%;
+  }
+</style>
+
+
+
+<!-- Page Principal -->
+<div class="mdl-grid full">
+  <div class="mdl-cell mdl-cell--2-col"></div>
+
+  <!-- System d'importation pour Mold Equipment List -->
+  <div class="mdl-cell mdl-cell--4-col">
+    <div class="mdl-card mdl-shadow--8dp full">
+      <div class="mdl-card__title goodyear-color--light goodyear-color-text">
+        <h6 class="mdl-card__title-text title">Import Mold Equipment List</h6>
+      </div>
+      <div class="mdl-card__supporting-text">
+        <p>L'ensemble des données sur les moules</p>
+        <form id="import_form_moldList" method="POST" action="/import" class="hidden" enctype="multipart/form-data">
+          <input type="file" id="import_file_moldList" name="file_moldList" style="display: none" accept=".xlsx, .xlsm, .xlsb, .xls, .xlt, .xls" />
+        </form>
+      </div>
+      <div class="mdl-card__actions mdl-card--border middle">
+        <button id="button_import_moldList" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color--purple-500 mdl-color-text--white">
+          Upload
+          <div class="mdl-tooltip" for="button_import_moldList">Upload Excel Data</div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- System d'importation pour Mold Equipment Spec -->
+  <div class="mdl-cell mdl-cell--4-col">
+    <div class="mdl-card mdl-shadow--8dp full">
+      <div class="mdl-card__title goodyear-color--light goodyear-color-text">
+        <h6 class="mdl-card__title-text title">Import Mold Equipment Spec</h6>
+      </div>
+      <div class="mdl-card__supporting-text">
+        <p>L'ensemble des données sur les codes</p>
+        <form id="import_form_moldSpec" method="POST" action="/import" class="hidden" enctype="multipart/form-data">
+          <input type="file" id="import_file_moldSpec" name="file_moldSpec" style="display: none" accept=".xlsx, .xlsm, .xlsb, .xls, .xlt, .xls" />
+        </form>
+      </div>
+      <div class="mdl-card__actions mdl-card--border middle">
+        <button id="button_import_moldSpec" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color--purple-500 mdl-color-text--white">
+          Upload
+          <div class="mdl-tooltip" for="button_import_moldSpec">Upload Excel Data</div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="mdl-cell mdl-cell--2-col"></div>
+</div>
+
+
+
+<!-- Script JavaScript -->
+<script type="text/javascript">
+  // Importation du fichier Excel Mold Equipment List
+  var import_file_moldList = document.querySelector('#import_file_moldList');
+
+  document.querySelector('#button_import_moldList').addEventListener('click', function() {
+    import_file_moldList.click();
+  });
+
+  import_file_moldList.onchange = function(event) {
+    console.log(import_file_moldList.files);
+    document.querySelector('#import_form_moldList').submit();
+  }
+
+  // Importation du fichier Excel Mold Equipment Spec
+  var import_file_moldSpec = document.querySelector('#import_file_moldSpec');
+
+  document.querySelector('#button_import_moldSpec').addEventListener('click', function() {
+    import_file_moldSpec.click();
+  });
+
+  import_file_moldSpec.onchange = function(event) {
+    console.log(import_file_moldSpec.files);
+    document.querySelector('#import_form_moldSpec').submit();
+  }
+</script>

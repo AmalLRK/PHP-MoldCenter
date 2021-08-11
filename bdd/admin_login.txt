@@ -1,0 +1,25 @@
+Admin Login :
+
+! Toujours en majuscule !
+USERID : ADMIN42
+NOMPRE : "IT MoldGod"
+Password : @dmin42!
+Password Hash : 61bc49d6e37a7626db667e1144bd3e22b4c2d353
+
+
+
+Main Rule : JSON FORMAT
+{"admin":true}
+
+{
+  "admin": true
+}
+
+
+
+Data Rule : JSON FORMAT
+{"Mold_App":{}}
+
+{
+  "Mold_App": {}
+}

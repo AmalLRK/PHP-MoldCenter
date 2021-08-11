@@ -1,0 +1,32 @@
+{
+  "admin": {
+    "name": "adminName",
+    "description": "adminDescription",
+    "color": "00C0C0"
+  },
+  "moderator": {
+    "name": "moderatorName",
+    "description": "moderatorDescription",
+    "color": "00F000"
+  },
+  "view": {
+    "name": "viewName",
+    "description": "viewDescription",
+    "color": "F00000"
+  },
+  "add": {
+    "name": "addName",
+    "description": "addDescription",
+    "color": "0C0000"
+  },
+  "edit": {
+    "name": "editName",
+    "description": "editDescription",
+    "color": "00000F"
+  },
+  "remove": {
+    "name": "removeName",
+    "description": "removeDescription",
+    "color": "0000CC"
+  }
+}

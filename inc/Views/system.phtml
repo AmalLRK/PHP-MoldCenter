@@ -1,0 +1,324 @@
+<!-- Récupération des données en PHP -->
+<?php
+
+$userList = $this->getParam('userList');
+
+$roleList = $this->getParam('roleList');
+
+$translateRoleList = $this->getParam('translateRoleList');
+
+$translate = $this->getParam('translate');
+
+// var_dump($userList);
+
+// var_dump($roleList);
+
+// var_dump($translate);
+
+?>
+
+
+
+<!-- Chargement des librairies JS et de la feuille de style CSS pour la page -->
+<link rel="stylesheet" href="/js/TableSort/tablesort.css" />
+<script type="text/javascript" src="/js/TableSort/tablesort.min.js"></script>
+<script type="text/javascript" src="/js/TableSort/sorts/tablesort.number.min.js"></script>
+<script type="text/javascript" src="/js/jets.min.js"></script>
+
+
+
+<!-- Feuille de style CSS de la page -->
+<style type="text/css">
+  .middle {
+    text-align: center !important;
+  }
+
+  .title {
+    font-weight: bold;
+  }
+
+  .full {
+    width: 100%;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  .cursorHand {
+    cursor: pointer;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  .inner {
+    overflow-x: scroll;
+    overflow-y: visible;
+    width: 100%;
+  }
+
+  .right {
+    text-align: right;
+  }
+</style>
+
+
+
+<!-- Page Principal -->
+<div class="mdl-card mdl-shadow--8dp full">
+  <!-- Titre principal -->
+  <div class="mdl-card__title goodyear-color--light goodyear-color-text">
+    <h6 class="mdl-card__title-text title"><?= $this->getVerifyTranslate($translate, 'userListTitle') ?></h6>
+
+    <!-- Système de recherche global -->
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable" style="padding: 0px; margin: auto;">
+      <label id="search_label" class="mdl-button mdl-js-button mdl-button--icon" style="top: 0px;" for="search">
+        <i class="material-icons goodyear-color-text">search</i>
+      </label>
+      <div class="mdl-tooltip" for="search_label"><?= $this->getVerifyTranslate($translate, 'searchToolTip') ?></div>
+      <div class="mdl-textfield__expandable-holder">
+        <input type="text" id="search" class="mdl-textfield__input goodyear-color-text" style="border-bottom-color: #FFDE00;">
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenu de la page -->
+  <div class="mdl-card__supporting-text mdl-grid">
+    <!-- Tableau des utilisateur -->
+    <div class=" mdl-cell mdl-cell--12-col inner">
+      <table id="userTab" class="mdl-data-table mdl-js-data-table">
+        <!-- Entête du tableau -->
+        <thead>
+          <!-- Nom des colonnes -->
+          <tr>
+            <!-- Ajout des noms de chaque colonne -->
+            <th class="mdl-data-table__cell--non-numeric goodyear-color--light goodyear-color-text middle"><?= $this->getVerifyTranslate($translate, 'IDText') ?></th>
+            <th class="mdl-data-table__cell--non-numeric goodyear-color--light goodyear-color-text middle"><?= $this->getVerifyTranslate($translate, 'nameText') ?></th>
+            <th class="mdl-data-table__cell--non-numeric goodyear-color--light goodyear-color-text middle"><?= $this->getVerifyTranslate($translate, 'prenomText') ?></th>
+            <th class="mdl-data-table__cell--non-numeric goodyear-color--light goodyear-color-text middle"><?= $this->getVerifyTranslate($translate, 'moderatorText') ?></th>
+            <th class="mdl-data-table__cell--non-numeric goodyear-color--light goodyear-color-text middle"><?= $this->getVerifyTranslate($translate, 'adminText') ?></th>
+            <!-- Ajout du nom de la colonne des actions si les actions sont autorisées -->
+            <th class="mdl-data-table__cell--non-numeric middle no-sort goodyear-color--light goodyear-color-text" data-sort-method="none"><?= $this->getVerifyTranslate($translate, 'actionColumn') ?></th>
+          </tr>
+        </thead>
+
+        <!-- Contenu du tableau -->
+        <tbody id="content">
+          <!-- Affichage de chaque utilisateur -->
+          <?php foreach ($userList as $key => $user) : ?>
+            <tr>
+              <!-- Affichage de chaque ligne de données des utilisateurs -->
+              <td data-id="<?= $user['USERID'] ?>" class="mdl-data-table__cell--non-numeric middle view_one_link cursorHand"><?= $user['USERID'] ?></td>
+              <td data-id="<?= $user['USERID'] ?>" class="mdl-data-table__cell--non-numeric middle view_one_link cursorHand"><?= explode(' ', $user['NOMPRE'])[0] ?></td>
+              <td data-id="<?= $user['USERID'] ?>" class="mdl-data-table__cell--non-numeric middle view_one_link cursorHand"><?= explode(' ', $user['NOMPRE'])[1] ?></td>
+              <td data-id="<?= $user['USERID'] ?>" class="mdl-data-table__cell--non-numeric middle view_one_link cursorHand"><?= $user['MODERATOR'] ? $this->getVerifyTranslate($translate, 'yesText') : $this->getVerifyTranslate($translate, 'noText') ?></td>
+              <td data-id="<?= $user['USERID'] ?>" class="mdl-data-table__cell--non-numeric middle view_one_link cursorHand"><?= $user['ADMIN'] ? $this->getVerifyTranslate($translate, 'yesText') : $this->getVerifyTranslate($translate, 'noText') ?></td>
+
+              <!-- Affichage de la barre des actions -->
+              <td class="mdl-data-table__cell--non-numeric middle">
+                <!-- Bouton de visualisation d'un utilisateur -->
+                <button id="view_button_<?= $user['USERID'] ?>" data-id="<?= $user['USERID'] ?>" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--purple-500 mdl-color-text--white view_one">
+                  <i class="material-icons">visibility</i>
+                </button>
+                <div class="mdl-tooltip" for="view_button_<?= $user['USERID'] ?>"><?= $this->getVerifyTranslate($translate, 'viewToolTip') ?></div>
+
+                <!-- Bouton d'édition d'un utilisateur -->
+                <button id="edit_button_<?= $user['USERID'] ?>" data-id="<?= $user['USERID'] ?>" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--blue-500 mdl-color-text--white edit_one">
+                  <i class="material-icons">edit</i>
+                </button>
+                <div class="mdl-tooltip" for="edit_button_<?= $user['USERID'] ?>"><?= $this->getVerifyTranslate($translate, 'editToolTip') ?></div>
+
+                <!-- Bouton de suppression unitaire d'un utilisateur -->
+                <button id="remove_button_<?= $user['USERID'] ?>" data-id="<?= $user['USERID'] ?>" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--red-500 mdl-color-text--white remove_one">
+                  <i class="material-icons">remove</i>
+                </button>
+                <div class="mdl-tooltip" for="remove_button_<?= $user['USERID'] ?>"><?= $this->getVerifyTranslate($translate, 'removeToolTip') ?></div>
+              </td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Bouton d'ajout en haut -->
+  <div class="mdl-card__menu">
+    <!-- Bouton d'ajout d'un utilisateur -->
+    <button id="button_add" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--green-500 mdl-color-text--white">
+      <i class="material-icons">add</i>
+      <div class="mdl-tooltip" for="button_add"><?= $this->getVerifyTranslate($translate, 'addToolTip') ?></div>
+    </button>
+  </div>
+</div>
+
+
+
+<!-- Formulaire d'ajout d'un utilisateur -->
+<dialog id="add_dialog" class="mdl-dialog add_form">
+  <div class="mdl-card full">
+    <!-- Titre du formulaire -->
+    <div class="mdl-card__title goodyear-color--light goodyear-color-text">
+      <h6 class="mdl-card__title-text title"><?= $this->getVerifyTranslate($translate, 'addFormTitle') ?></h6>
+    </div>
+
+    <!-- Contenu du formulaire -->
+    <form id="add_form" method="post" action="/auth/systemAdd" class="mdl-card__supporting-text mdl-grid">
+      <!-- Champ du nom de l'utilisateur -->
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--6-col">
+        <input autocomplete="off" required class="mdl-textfield__input" type="text" id="add_nom" name="nom">
+        <label class="mdl-textfield__label" for="nom"><?= $this->getVerifyTranslate($translate, 'addFormNom') ?></label>
+      </div>
+
+      <!-- Champ du prénom de l'utilisateur -->
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--6-col">
+        <input autocomplete="off" required class="mdl-textfield__input" type="text" id="add_prenom" name="prenom">
+        <label class="mdl-textfield__label" for="prenom"><?= $this->getVerifyTranslate($translate, 'addFormPrenom') ?></label>
+      </div>
+
+      <!-- Champ de l'identifiant de l'utilisateur -->
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--4-col">
+        <input autocomplete="off" required class="mdl-textfield__input" type="text" id="add_userid" name="userid">
+        <label class="mdl-textfield__label" for="userid"><?= $this->getVerifyTranslate($translate, 'addFormUserID') ?></label>
+      </div>
+
+      <!-- Champ du mot de passe de l'utilisateur -->
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--4-col">
+        <input autocomplete="off" required class="mdl-textfield__input" type="password" id="add_password" name="password">
+        <label class="mdl-textfield__label" for="password"><?= $this->getVerifyTranslate($translate, 'addFormPassword') ?></label>
+      </div>
+
+      <!-- Choix du role de l'utilisateur -->
+      <div class="mdl-cell mdl-cell--4-col">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label full">
+          <select class="mdl-textfield__input" type="text" name="role">
+            <?php foreach ($roleList as $role => $rule) : ?>
+              <option value="<?= $role ?>"><?= $this->getVerifyTranslate($translateRoleList, $role) ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+      </div>
+    </form>
+
+    <!-- Confirmation du formulaire -->
+    <div class="mdl-card__actions mdl-card--border">
+      <button id="button_add_form" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--green mdl-color-text--white right">
+        <?= $this->getVerifyTranslate($translate, 'buttonAddFormUser') ?>
+      </button>
+      <div class="mdl-tooltip" for="button_add_form"><?= $this->getVerifyTranslate($translate, 'buttonAddFormUser') ?></div>
+
+      <button id="close_add_form_button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--red mdl-color-text--white close">
+        <?= $this->getVerifyTranslate($translate, 'buttonCancel') ?>
+      </button>
+      <div class="mdl-tooltip" for="close_add_form_button"><?= $this->getVerifyTranslate($translate, 'buttonCancel') ?></div>
+    </div>
+
+    <!-- Fermeture du formulaire -->
+    <div class="mdl-card__menu">
+      <button id="close_add_form" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color-text--white close">
+        <i class="material-icons">close</i>
+      </button>
+      <div class="mdl-tooltip" for="close_add_form"><?= $this->getVerifyTranslate($translate, 'buttonCancel') ?></div>
+    </div>
+  </div>
+</dialog>
+
+
+
+<!-- Script JavaScript -->
+<script type="text/javascript">
+  // Ajout du système de trie automatique du tableau
+  new Tablesort(document.querySelector('#userTab'));
+
+
+
+  // Système de visualisation avancée
+  document.querySelectorAll('.view_one_link').forEach(
+    function(data) {
+      data.addEventListener('click', function() {
+        window.location.replace('/auth/manage/' + data.dataset.id);
+      });
+    }
+  );
+
+  // Ajout du lien pour chaque bouton de visualisation avancée
+  document.querySelectorAll('.view_one').forEach(
+    function(button) {
+      button.addEventListener('click', function() {
+        window.location.replace('/auth/manage/' + button.dataset.id);
+      });
+    }
+  );
+
+
+
+  // Ajout du système pour afficher le formulaire d'ajout
+  document.querySelector('#button_add').addEventListener('click', function(button) {
+    document.querySelector('#add_dialog').showModal();
+  });
+
+  // Paramètre du formulaire d'ajout
+  document.querySelector('#button_add_form').addEventListener('click', function() {
+    var add_form = document.querySelector('#add_form');
+    if (add_form.reportValidity())
+      add_form.submit();
+  })
+
+
+
+  // Ajout du système pour afficher le formulaire d'édition
+  document.querySelectorAll('.edit_one').forEach(
+    function(button) {
+      button.addEventListener('click', function() {
+        window.location.replace('/auth/manage/' + button.dataset.id);
+      });
+    }
+  );
+
+
+
+  // Configuration du formulaire et des actions pour la suppression unitaire
+  document.querySelectorAll('.remove_one').forEach(
+    function(button) {
+      button.addEventListener('click', function() {
+        swal({
+          title: "<?= $this->getVerifyTranslate($translate, 'removeFormTitle') ?>",
+          text: "<?= $this->getVerifyTranslate($translate, 'removeFormText') ?>",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+        }).then((value) => {
+          if (value) {
+            swal({
+              title: "<?= $this->getVerifyTranslate($translate, 'removeFormSuccessTitle') ?>",
+              icon: "success",
+            }).then(function() {
+              window.location.replace('/auth/systemRemove/' + button.dataset.id);
+            });
+          }
+        });
+      });
+    }
+  );
+
+
+
+  // Fermeture automatique des formulaires
+  document.querySelectorAll('.close').forEach(function(elm) {
+    if (elm != null) {
+      elm.addEventListener('click', function() {
+        // Fermeture du formulaire d'ajout
+        document.querySelector('#add_dialog').close();
+      });
+    }
+  });
+
+
+
+  // Système de recherche global
+  new Jets({
+    searchTag: '#search',
+    contentTag: '#content'
+  });
+</script>

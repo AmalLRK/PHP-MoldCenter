@@ -1,0 +1,14 @@
+{
+  "Mold_App": {
+    "name": "MoldAppName",
+    "description": "MoldAppDescription",
+    "link": "mold",
+    "color": "82ccdd"
+  },
+  "Code_App": {
+    "name": "CodeAppName",
+    "description": "CodeAppDescription",
+    "link": "code",
+    "color": "b71540"
+  }
+}

@@ -1,0 +1,233 @@
+<!-- Récupération des données en PHP -->
+<?php
+
+$translate = $this->getParam('translate');
+
+$code = $this->getParam('code');
+
+$dataRule = $this->getParam('dataRule');
+
+$dataList = $this->getParam('dataList');
+$dataCategoryList = $this->getParam('dataCategoryList');
+
+$translateData = $this->getParam('translateData');
+$translateDataCategory = $this->getParam('translateDataCategory');
+
+$statusList = $this->getParam('statusList');
+$translateStatusList = $this->getParam('translateStatusList');
+
+
+// var_dump($translate);
+
+// var_dump($code);
+
+// var_dump($dataRule);
+
+// var_dump($dataList);
+// var_dump($dataCategoryList);
+
+// var_dump($translateData);
+// var_dump($translateDataCategory);
+
+// var_dump($statusList);
+// var_dump($translateStatusList);
+
+
+// Outils pour les fonctions nécessaire
+$toolsController = new toolsController();
+
+?>
+
+
+
+<!-- Feuille de style CSS de la page -->
+<style type="text/css">
+  .title {
+    font-weight: bold;
+  }
+
+  .full {
+    width: 100%;
+  }
+
+  .middle {
+    text-align: center !important;
+  }
+</style>
+
+
+
+<!-- Page de visualisation avancé d'un code -->
+<div class="mdl-card mdl-shadow--8dp full">
+  <!-- Titre de la page -->
+  <div class="mdl-card__title goodyear-color--light goodyear-color-text">
+    <h6 class="mdl-card__title-text title"><?= $this->getVerifyTranslate($translate, 'advancedViewTitle') ?></h6>
+  </div>
+
+  <!-- Contenu du code -->
+  <div class="mdl-card__supporting-text mdl-grid">
+    <!-- Affichage de chaque catégorie avec les données -->
+    <?php foreach ($dataCategoryList as $category => $color) : ?>
+      <div class="mdl-cell mdl-cell--3-col">
+        <div class="mdl-card mdl-shadow--8dp full">
+          <!-- Affichage du titre de la catégorie -->
+          <div class="mdl-card__title" style="background-color: #<?= $color ?>; color: <?= $toolsController->autoTextColor('#' . $color) ?>;">
+            <h6 class="mdl-card__title-text title"><?= $this->getVerifyTranslate($translateDataCategory, $category) ?></h6>
+          </div>
+
+          <!-- Affichage des données de la catégorie -->
+          <div class="mdl-card__supporting-text mdl-grid">
+            <ul class="mdl-list">
+              <?php foreach ($dataRule as $dataBaseName => $rule) : ?>
+                <?php if ($dataBaseName != 'FILTER') : ?>
+                  <?php if ($dataList[$dataBaseName]['category']['name'] == $category) : ?>
+                    <li class="mdl-list__item mdl-list__item--two-line">
+                      <?php switch ($dataBaseName): default: ?>
+                        <!-- Contenu de base -->
+                        <span class="mdl-list__item-primary-content">
+                          <span class="mdl-list__item-sub-title" id="<?= $dataBaseName ?>"><?= $this->getVerifyTranslate($translateData, $dataList[$dataBaseName]['name']) ?></span>
+                          <span><?= ($code[$dataBaseName] != '') ? $code[$dataBaseName] : $this->getVerifyTranslate($translate, 'NoData') ?></span>
+                        </span>
+                        <?php break; ?>
+
+                      <?php case 'STATUS': ?>
+                        <!-- Contenu pour le statut -->
+                        <span class="mdl-list__item-primary-content">
+                          <span class="mdl-list__item-sub-title" id="<?= $dataBaseName ?>"><?= $this->getVerifyTranslate($translateData, $dataList[$dataBaseName]['name']) ?></span>
+                            <?php if ($code[$dataBaseName] != '') : ?>
+                              <span style="border-style: double; border-color: <?= '#' . $statusList[$code[$dataBaseName]] ?>;"><?= $this->getVerifyTranslate($translateStatusList, $code[$dataBaseName]) ?></span>
+                            <?php else : ?>
+                              <span><?= $code[$dataBaseName]  != '' ? $code[$dataBaseName] : $this->getVerifyTranslate($translate, 'NoData') ?></span>
+                            <?php endif; ?>
+                          </span>
+                        </span>
+                        <?php break; ?>
+                      
+                      <?php case 'PCI': ?>
+                        <!-- Contenu pour le PCI -->
+                        <span class="mdl-list__item-primary-content">
+                          <span class="mdl-list__item-sub-title" id="<?= $dataBaseName ?>"><?= $this->getVerifyTranslate($translateData, $dataList[$dataBaseName]['name']) ?></span>
+                          <span><?= ($code[$dataBaseName] == 'Y') ? $this->getVerifyTranslate($translate, 'pciCodeYes') : $this->getVerifyTranslate($translate, 'pciCodeNo') ?></span>
+                        </span>
+                        <?php break; ?>
+                      <?php endswitch; ?>
+                    </li>
+                  <?php endif; ?>
+                <?php endif; ?>
+              <?php endforeach; ?>
+            </ul>
+          </div>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  </div>
+
+  <!-- fermeture de l'affichage en bas -->
+  <div class="mdl-card__actions mdl-card--border">
+    <button id="close_view_dialog_button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--purple mdl-color-text--white close right">
+      <?= $this->getVerifyTranslate($translate, 'buttonClose') ?>
+    </button>
+    <div class="mdl-tooltip" for="close_view_dialog_button"><?= $this->getVerifyTranslate($translate, 'buttonClose') ?></div>
+  </div>
+
+  <!-- Fermeture de l'affichage en haut -->
+  <div class="mdl-card__menu">
+    <button data-id="<?= $code['CODE_PROD_1'] ?>" id="history_view_dialog" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color-text--white" style="background-color: #4e94c7;">
+      <i class="material-icons">history</i>
+    </button>
+    <div class="mdl-tooltip" for="history_view_dialog"><?= $this->getVerifyTranslate($translate, 'viewHistoryToolTip') ?></div>
+
+    <!-- Bouton d'édition d'un code -->
+    <?php if (frontController::haveRight('edit', 'Code_App')) : ?>
+      <button id="edit_button" data-id="<?= $code['CODE_PROD_1'] ?>" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--blue-500 mdl-color-text--white">
+        <i class="material-icons">edit</i>
+      </button>
+      <div class="mdl-tooltip" for="edit_button"><?= $this->getVerifyTranslate($translate, 'editToolTip') ?></div>
+    <?php endif; ?>
+
+    <!-- Bouton de suppression unitaire d'un code -->
+    <?php if (frontController::haveRight('remove', 'Code_App')) : ?>
+      <button id="remove_button" data-id="<?= $code['CODE_PROD_1'] ?>" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--red-500 mdl-color-text--white" style="margin-right: 10px;">
+        <i class="material-icons">remove</i>
+      </button>
+      <div class="mdl-tooltip" for="remove_button"><?= $this->getVerifyTranslate($translate, 'removeToolTip') ?></div>
+    <?php endif; ?>
+
+    <button id="close_view_dialog" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color-text--white close">
+      <i class="material-icons">close</i>
+    </button>
+    <div class="mdl-tooltip" for="close_view_dialog"><?= $this->getVerifyTranslate($translate, 'buttonClose') ?></div>
+  </div>
+</div>
+
+
+
+<!-- Ajout des descriptions pour chaque champs -->
+<?php foreach ($dataList as $dataBaseName => $data) : ?>
+  <div class="mdl-tooltip mdl-tooltip--large" for="<?= $dataBaseName ?>"><?= $this->getVerifyTranslate($translateData, $data['description']) ?></div>
+<?php endforeach; ?>
+
+
+
+<!-- Script JavaScript -->
+<script type="text/javascript">
+  // Fermeture automatique des formulaires
+  document.querySelectorAll('.close').forEach(
+    function(elm) {
+      elm.addEventListener('click', function() {
+        // Fermeture de la visualisation
+        window.location.replace('/code');
+      });
+    }
+  );
+
+
+
+  // Système d'édition
+  <?php if (frontController::haveRight('edit', 'Code_App')) : ?>
+    document.querySelectorAll('#edit_button').forEach(
+      function(button) {
+        button.addEventListener('click', function() {
+          window.location.replace('/code/editView/' + button.dataset.id);
+        });
+      }
+    );
+  <?php endif; ?>
+
+
+
+  // Système de suppression
+  <?php if (frontController::haveRight('remove', 'Code_App')) : ?>
+    // Configuration du formulaire et des actions pour la suppression unitaire
+    document.querySelectorAll('#remove_button').forEach(
+      function(button) {
+        button.addEventListener('click', function() {
+          swal({
+            title: "<?= $this->getVerifyTranslate($translate, 'removeFormTitle') ?>",
+            text: "<?= $this->getVerifyTranslate($translate, 'removeFormText') ?>",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          }).then((value) => {
+            if (value) {
+              window.open('/code/remove/' + button.dataset.id);
+              swal({
+                title: "<?= $this->getVerifyTranslate($translate, 'removeFormSuccessTitle') ?>",
+                icon: "success",
+              }).then(function() {
+                window.location.replace('/code');
+              });
+            }
+          });
+        });
+      }
+    );
+  <?php endif; ?>
+
+
+
+  // Ouverture de l'historique du code
+  document.querySelector('#history_view_dialog').addEventListener('click', function() {
+    window.open('/history/view/Code_App/' + document.querySelector('#history_view_dialog').dataset.id);
+  });
+</script>

@@ -1,0 +1,24 @@
+    <?php if(isset($_GET['errorMsg'])): ?>
+        <div class="msg mdl-cell mdl-cell--12-col mdl-color-text--red" style="text-align: center;font-size: 30px;">
+            <?= $_GET['errorMsg'] ?>
+        </div>
+    <?php endif; ?>
+    <?php if(isset($_GET['infoMsg'])): ?>
+        <div class="msg mdl-cell mdl-cell--12-col mdl-color-text--blue" style="text-align: center;font-size: 30px;">
+            <?= $_GET['infoMsg'] ?>
+        </div>
+    <?php endif; ?>
+    </div>
+  </main>
+  <div class="mdl-layout__obfuscator-right"></div>
+</div>
+<div id="badRequestAjax" class="mdl-js-snackbar mdl-snackbar">
+  <div class="mdl-snackbar__text"></div>
+  <button class="mdl-snackbar__action" type="button"></button>
+</div>
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', () => {});
+</script>
+
+</body>
+</html>

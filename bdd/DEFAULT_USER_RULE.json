@@ -1,0 +1,334 @@
+{
+  "default": {
+    "mainRule": {
+      "Mold_App": {
+        "view": true
+      },
+      "Code_App": {
+        "view": true
+      }
+    },
+    "dataRule": {
+      "Mold_App": {
+        "STATUT": { "primary": true },
+        "REF_MOULE": { "primary": true, "search": true },
+        "COMMENTAIRE": { "primary": true },
+        "PATTERNSIZE": { "primary": true, "search": true },
+        "CODE_PROD_2": { "primary": true, "search": true },
+        "DIM_CTN2": { "primary": true, "search": true },
+        "FILTER": {
+          "operationnelName": true,
+          "onPresseName": true,
+          "onDerogationName": true,
+          "newName": true,
+          "toCleaningName": true,
+          "toFixingName": true,
+          "toControlName": { "default": true },
+          "toDeleteName": true
+        }
+      },
+      "Code_App": {
+        "STATUS": { "primary": true },
+        "CODE_PROD_1": { "search": true, "primary": true },
+        "S_DIA_RELIEVE": {},
+        "SEUIL_CRYO_CODE": { "primary": true },
+        "SALES_CODE": { "search": true, "primary": true },
+        "SMARTEAM": {},
+        "T_MINI": {},
+        "T_MAXI": {},
+        "PCI": {},
+        "FILTER": {
+          "activeName": { "default": true },
+          "inactiveName": true,
+          "destroyName": true
+        }
+      }
+    }
+  },
+  "LKY": {
+    "mainRule": {
+      "Mold_App": {
+        "view": true,
+        "edit": true
+      },
+      "Code_App": {
+        "view": true,
+        "edit": true
+      }
+    },
+    "dataRule": {
+      "Mold_App": {
+        "STATUT": { "edit": true, "primary": true },
+        "REF_MOULE": { "primary": true, "search": true },
+        "CLOGGED_HOLES": { "edit": true, "primary": true },
+        "FILTER": {
+          "toCleaningName": { "default": true },
+          "toFixingName": { "default": true },
+          "inCleaningName": true,
+          "inFixingName": true,
+          "trousBouchesName": true
+        }
+      },
+      "Code_App": {
+        "STATUS": { "primary": true },
+        "CODE_PROD_1": { "search": true, "primary": true },
+        "S_DIA_RELIEVE": {},
+        "SEUIL_CRYO_CODE": { "primary": true },
+        "SALES_CODE": { "search": true, "primary": true },
+        "SMARTEAM": {},
+        "GOUPILLE": {},
+        "BAGO_BMR": {},
+        "BAGO_TMR": {},
+        "BAGO_ADAPTER": {},
+        "BAGO_BLADDER": {},
+        "MHI_BMR": {},
+        "MHI_BLADDER": {},
+        "T_MINI": {},
+        "T_MAXI": {},
+        "PCI": {},
+        "FILTER": {
+          "activeName": { "default": true },
+          "inactiveName": true,
+          "destroyName": true
+        }
+      }
+    }
+  },
+  "moderator" : {
+    "mainRule" : {
+      "Mold_App": {
+        "moderator": true
+      },
+      "Code_App": {
+        "moderator": true
+      }
+    },
+    "dataRule" : {
+      "Mold_App": {
+        "STATUT": {
+          "edit": true,
+          "primary": true
+        },
+        "LOCATION_TYPE": {
+          "edit": true
+        },
+        "LOCATION": {
+          "edit": true
+        },
+        "REF_MOULE": {
+          "edit": true,
+          "search": true,
+          "primary": true
+        },
+        "LAST_CHECK_DATE": {
+          "edit": true
+        },
+        "LAST_RESULT": {
+          "edit": true
+        },
+        "COMMENT_METRO": {
+          "edit": true
+        },
+        "START_DATE": {
+          "edit": true
+        },
+        "END_DATE": {
+          "edit": true
+        },
+        "COMMENT_EXCEPT": {
+          "edit": true
+        },
+        "COMMENTAIRE": {
+          "edit": true,
+          "primary": true
+        },
+        "PATTERNSIZE": {
+          "edit": true,
+          "search": true,
+          "primary": true
+        },
+        "CODE_PROD_2": {
+          "edit": true,
+          "search": true,
+          "primary": true
+        },
+        "NB_CYCLE_CUISSON_LIFE": {
+          "edit": true
+        },
+        "NB_CYCLE_CUISSON_NOW": {
+          "edit": true
+        },
+        "DIM_CTN2": {
+          "edit": true,
+          "search": true,
+          "primary": true
+        },
+        "GOUPILLE2": {
+          "edit": true
+        },
+        "REF_CTN": {
+          "edit": true
+        },
+        "REF_SEGMENT": {
+          "edit": true
+        },
+        "REF_FLANC_SUP": {
+          "edit": true
+        },
+        "REF_FLANC_INF": {
+          "edit": true
+        },
+        "DATE_GET_MOLD": {
+          "edit": true
+        },
+        "TYPE_CTN2": {
+          "edit": true
+        },
+        "POSITION_ACTUEL_DATE": {
+          "edit": true
+        },
+        "GSWR_BOTTOM": {
+          "edit": true
+        },
+        "GSWR_TOP": {
+          "edit": true
+        },
+        "GTRD": {
+          "edit": true
+        },
+        "DRAWING": {
+          "edit": true
+        },
+        "S_DIAMETRE": {
+          "edit": true
+        },
+        "L_DIAMETRE": {
+          "edit": true
+        },
+        "JEUX_TOTAL_SECTEUR": {
+          "edit": true
+        },
+        "CLOGGED_HOLES": {
+          "edit": true
+        },
+        "DATE_LAST_ENVELOPPE": {
+          "edit": true
+        },
+        "GRADES": {
+          "edit": true
+        },
+        "CAUSE_GRADE": {
+          "edit": true
+        },
+        "FILTER": {
+          "operationnelName": true,
+          "onPresseName": true,
+          "onDerogationName": true,
+          "newName": true,
+          "toCleaningName": true,
+          "toFixingName": true,
+          "toControlName": {
+            "default": true
+          },
+          "toDeleteName": true,
+          "inCleaningName": true,
+          "inFixingName": true,
+          "inControlName": true,
+          "trousBouchesName": true,
+          "deleteName": true,
+          "transfertName": true,
+          "waitingDerogationName": true,
+          "waitingReceptionName": true,
+          "fixingReturnName": true
+        }
+      },
+      "Code_App": {
+        "STATUS": {
+          "edit": true,
+          "primary": true
+        },
+        "CODE_PROD_1": {
+          "edit": true,
+          "search": true,
+          "primary": true
+        },
+        "S_DIA_RELIEVE": {
+          "edit": true
+        },
+        "SEUIL_CRYO_CODE": {
+          "edit": true,
+          "primary": true
+        },
+        "N_SPEC_EQUIP": {
+          "edit": true
+        },
+        "CODE_PROFIL": {
+          "edit": true
+        },
+        "SALES_CODE": {
+          "edit": true,
+          "search": true,
+          "primary": true
+        },
+        "BAGUES_TYPE": {
+          "edit": true
+        },
+        "SMARTEAM": {
+          "edit": true
+        },
+        "GOUPILLE": {
+          "edit": true
+        },
+        "BAGO_BMR": {
+          "edit": true
+        },
+        "BAGO_TMR": {
+          "edit": true
+        },
+        "BAGO_ADAPTER": {
+          "edit": true
+        },
+        "BAGO_BLADDER": {
+          "edit": true
+        },
+        "MHI_BMR": {
+          "edit": true
+        },
+        "MHI_BLADDER": {
+          "edit": true
+        },
+        "T_MINI": {
+          "edit": true
+        },
+        "T_MAXI": {
+          "edit": true
+        },
+        "PCI": {
+          "edit": true
+        },
+        "S_DIAMETRE": {
+          "edit": true
+        },
+        "L_DIAMETRE": {
+          "edit": true
+        },
+        "JEUX_TOTAL_SECTEUR": {
+          "edit": true
+        },
+        "REF_SPEC": {
+          "edit": true
+        },
+        "TYPE_PRESSE": {
+          "edit": true
+        },
+        "FILTER": {
+          "activeName": {
+            "default": true
+          },
+          "inactiveName": true,
+          "destroyName": true
+        }
+      }
+    }
+  }
+}

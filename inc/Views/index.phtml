@@ -1,0 +1,77 @@
+<!-- Récupération des données en PHP -->
+<?php
+
+$pageList = $this->getParam('pageList');
+$translate = $this->getParam('translate');
+$translateList = $this->getParam('translateList');
+
+$dataRule = frontController::getSession('role')['dataRule'];
+
+// var_dump($pageList);
+// var_dump($translate);
+// var_dump($translateList);
+
+// var_dump($dataRule);
+
+?>
+
+
+
+<!-- Feuille de style CSS de la page -->
+<style type="text/css">
+  .full {
+    width: 100%;
+  }
+
+  .middle {
+    text-align: center !important;
+  }
+
+  .title {
+    font-weight: bold;
+  }
+</style>
+
+
+
+<!-- Page Principal -->
+<?php $i = 1 ?>
+<?php foreach ($pageList as $appBaseName => $data) : ?>
+  <?php if (count($pageList) == 1) : ?>
+    <div class="mdl-cell mdl-cell--4-col"></div>
+  <?php elseif ($i == 1) : ?>
+    <div class="mdl-cell mdl-cell--2-col"></div>
+  <?php endif; ?>
+  <?php if (isset($dataRule[$appBaseName])) : ?>
+    <div class="mdl-cell mdl-cell--4-col">
+      <div class="mdl-card mdl-shadow--8dp full">
+        <div class="mdl-card__title goodyear-color-text goodyear-color--light">
+          <h6 class="mdl-card__title-text title"><?= $this->getVerifyTranslate($translateList, $data['name']) ?></h6>
+        </div>
+
+        <div class="mdl-card__supporting-text">
+          <p><?= $this->getVerifyTranslate($translateList, $data['description']) ?></p>
+        </div>
+
+        <div class="mdl-card__actions mdl-card--border middle">
+          <a href="/<?= $data['link'] ?>" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" style="background-color: #<?= $data['color'] ?>">
+            <?= $this->getVerifyTranslate($translate, 'buttonLaunch') ?>
+          </a>
+        </div>
+      </div>
+    </div>
+  <?php endif; ?>
+  <?php if (count($pageList) == 1) : ?>
+    <div class="mdl-cell mdl-cell--4-col"></div>
+  <?php elseif ($i == 2) : ?>
+    <div class="mdl-cell mdl-cell--2-col"></div>
+  <?php endif; ?>
+  <?php $i = $i + 1 ?>
+  <?php $i == 3 ? $i = 1 : '' ?>
+<?php endforeach; ?>
+
+
+
+<!-- Script JavaScript -->
+<script type="text/javascript">
+</script>

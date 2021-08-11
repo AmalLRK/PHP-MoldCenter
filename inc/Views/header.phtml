@@ -1,0 +1,486 @@
+<?php
+
+// Récupération de la liste des applications
+$indexModel = new indexModel();
+$pageList = $indexModel->getIndexList();
+
+// Récupération de la traduction pour les applications
+$translateList = $this->getTranslate('Index_List');
+
+// Récupération des droits sur les données
+$dataRule = frontController::getSession('role')['dataRule'];
+
+
+// Récupération de l'application dans laquelle on est
+$currentApp = frontController::getSession('currentApp');
+
+// Récupération de la liste des liens pour l'application
+$headerList = json_decode(file_get_contents('./bdd/HEADER_LIST.json'), true);
+
+// Récupération de la traduction pour les lien
+$translateHeaderList = $this->getTranslate('Header_List');
+
+
+// Récupération de la traduction pour le header
+$translate = $this->getTranslate('Header');
+
+
+// var_dump($pageList);
+
+// var_dump($translateList);
+
+// var_dump($dataRule);
+
+
+// var_dump($currentApp);
+// var_dump($headerList);
+// var_dump($translateHeaderList);
+
+
+// var_dump($translate);
+
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <title><?= $this->getParam('titlePage') ? $this->getParam('titlePage') : '' ?></title>
+  <!-- <link rel="stylesheet" href="/mdl/1.2.0/material.teal-amber.min.css" /> -->
+  <!-- <link rel="stylesheet" href="/mdl/1.2.0/material.blue_grey-green.min.css" /> -->
+  <!-- Feuille de style -->
+  <link rel="stylesheet" href="/mdl/1.3.0/material.blue_grey-green.min.css" />
+  <link rel="stylesheet" href="/mdl/fonts/roboto.css">
+  <link rel="stylesheet" href="/css/style.css" />
+  <link href="/mdl/material-icons/material.css" rel="stylesheet" />
+
+  <style type="text/css">
+    .mdl-layout__drawer {
+      min-width: 240px !important;
+      /* max-width: 30% !important; */
+      width: auto !important;
+      left: -100%;
+    }
+
+    .mdl-layout__drawer.is-visible {
+      left: 0;
+    }
+
+    .img-rounded {
+      border-radius: 50%;
+      border: 2px solid white;
+    }
+
+    .user-badge b {
+      font-size: 14px;
+      font-weight: 100;
+      margin-right: 15px;
+      line-height: 36px;
+      float: left;
+    }
+
+    .user-badge span {
+      width: 36px;
+      height: 36px;
+      display: inline-block;
+      border-radius: 50%;
+      background: green;
+      position: relative;
+    }
+
+    form .mdl-card {
+      text-align: center;
+      width: 100%;
+    }
+
+    .user-badge span i {
+      position: absolute;
+      top: 5px;
+      left: 6px;
+      cursor: pointer;
+    }
+
+    .mdl-menu__container.is-visible,
+    .mdl-menu__container.is-animating {
+      margin-top: 5px;
+    }
+
+    main.mdl-layout__content {
+      /*background-image: url("/img/industry.jpg");*/
+    }
+
+    .mdl-layout__drawer-button .material-icons {
+      line-height: 1.7;
+    }
+
+    .mdl-textfield--floating-label.is-focused .mdl-textfield__label,
+    .mdl-textfield--floating-label.is-dirty .mdl-textfield__label,
+    .mdl-textfield--floating-label.has-placeholder .mdl-textfield__label {
+      color: #1976d2 !important;
+    }
+
+    .mdl-textfield__label:after {
+      background-color: #1976d2;
+    }
+
+    body * {
+      font-family: Roboto;
+    }
+
+    a.logout {
+      text-decoration: none;
+    }
+
+    dialog[open] {
+      -webkit-animation: show .45s ease normal;
+    }
+
+    @-webkit-keyframes show {
+      from {
+        transform: translateY(-110%);
+      }
+
+      to {
+        transform: translateY(0%);
+      }
+    }
+
+    dialog::backdrop {
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    dialog {
+      padding: 0;
+    }
+
+    .mdl-dialog {
+      width: 50%;
+    }
+
+    .goodyear-color {
+      background-color: #012d89 !important;
+    }
+
+    .goodyear-color--light {
+      background-color: #2150af !important;
+    }
+
+    .mdl-layout__drawer-button {
+      outline: none;
+    }
+
+    .goodyear-color-text {
+      color: #FFDE00 !important;
+    }
+
+    .goodyear-color-all {
+      background-color: #012d89 !important;
+      color: #FFDE00 !important;
+    }
+
+    .mdl-navigation {
+      padding-top: 0px !important;
+    }
+
+    .right {
+      float: right;
+    }
+
+    .input-date {
+      top: -3px;
+    }
+
+    .input-date>label {
+      top: 7px;
+    }
+
+    .moderatorAdminManualButton {
+      background-color: #e23737;
+      color: #000000;
+    }
+
+    .userManualButton {
+      background-color: #65ad48;
+      color: #000000;
+    }
+
+    .developerManualButton {
+      background-color: #666eda;
+      color: #000000;
+    }
+
+    .cursorHand {
+      cursor: pointer;
+    }
+  </style>
+
+  <!-- Script de base du site -->
+  <!-- Script MDL -->
+  <script defer src="/mdl/1.3.0/material.min.js"></script>
+
+  <!-- Ajax : call ajax permet de faire un appel a un script PHP -->
+  <!-- <script src="/js/ajax.js"></script> -->
+
+  <!-- D3JS : Graphique -->
+  <!-- Nouvelle version -->
+  <!-- <script src="/js/d3.min.js" charset="utf-8"></script> -->
+  <!-- Ancienne version -->
+  <!-- <script src="/js/d3.v4.min.js" charset="utf-8"></script> -->
+
+  <!-- JetSearch : Recherche dynamique, doc : https://jets.js.org/ -->
+  <!-- <script type="text/javascript" src="/js/jets.min.js"></script> -->
+
+  <!-- Moment : gestion des dates, doc : https://momentjs.com/docs/#/parsing/string-format/ -->
+  <!-- <script type="text/javascript" src="/js/moment.js"></script> -->
+
+  <!-- Tablesort : trier des tableaux dynamiquement, doc : http://tristen.ca/tablesort/demo/ -->
+  <!-- Ne pas oublié : -->
+  <!-- <link rel="stylesheet" href="/js/TableSort/tablesort.css"/> -->
+  <!-- Base du trie -->
+  <!-- <script type="text/javascript" src="/js/TableSort/tablesort.min.js"></script> -->
+
+  <!-- Sweet Alert : Affichage de fenêtre de dialogue diverses (formulaires et choix disponibles) -->
+  <!-- Documentation : https://sweetalert.js.org/docs/ -->
+  <!-- Exemple divers : https://sweetalert.js.org/guides/ -->
+  <!-- Ne pas oublié : -->
+  <!-- <script type="text/javascript" src="/js/sweetalert.min.js"></script> -->
+  <script type="text/javascript" src="/js/sweetalert.min.js"></script>
+
+  <!-- Chart JS : Affichage et création de graphique divers -->
+  <!-- Documentation : https://www.chartjs.org/docs/latest/ -->
+  <!-- Exemple divers : https://www.chartjs.org/samples/latest/ -->
+  <!-- Ne pas oublié avec Moment -->
+  <!-- <script type="text/javascript" src="/js/moment.js"></script> -->
+  <!-- <link rel="stylesheet" href="/js/ChartJS/Chart.min.css"/> -->
+  <!-- <script type="text/javascript" src="/js/ChartJS/Chart.min.js"></script> -->
+  <!-- Ne pas oublié en bundle (Moment compris dedans) -->
+  <!-- <link rel="stylesheet" href="/js/ChartJS/Chart.min.css"/> -->
+  <!-- <script type="text/javascript" src="/js/ChartJS/Chart.bundle.min.js"></script> -->
+
+  <script type="text/javascript">
+    //Javascript UCfirst
+    String.prototype.ucfirst = function(t) {
+      return this[0].toUpperCase() + this.substr(1);
+    };
+
+    const guid = function() {
+      function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+      }
+      return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const badRequestAjax = document.querySelector('#badRequestAjax');
+
+
+    });
+  </script>
+  <!-- FAVICON -->
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="57x57" href="/favicons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/favicons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/favicons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/favicons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/favicons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/favicons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/favicons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/favicons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="manifest" href="/favicons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/favicons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+
+<body>
+  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-color--grey-100">
+    <header class="mdl-layout__header goodyear-color">
+      <!-- Menu complet en haut -->
+      <div class="mdl-layout__header-row">
+        <span class="mdl-layout-title">
+          <a id="main_title_goodyear" href="/"><img style="height:70px" src="/img/goodyear-logo.png" /></a>
+          <div class="mdl-tooltip" for="main_title_goodyear"><?= $this->getVerifyTranslate($translate, 'tooltipMain') ?></div>
+          <sup style="font-size:14px;"><b><?= $this->getVerifyTranslate($translate, 'appTitle') ?></b></sup>
+        </span>
+        <nav class="mdl-navigation mdl-layout--large-screen-only">
+          <?php foreach ($pageList as $appBaseName => $data) : ?>
+            <?php if (isset($dataRule[$appBaseName])) : ?>
+              <a id="<?= $appBaseName ?>" class="mdl-navigation__link mdl-color-text--grey-200 mdl-color-text--white" href="/<?= $data['link'] ?>"><?= $this->getVerifyTranslate($translateList, $data['name']) ?></a>
+              <div class="mdl-tooltip" for="<?= $appBaseName ?>"><?= $this->getVerifyTranslate($translateList, $data['description']) ?></div>
+            <?php endif; ?>
+          <?php endforeach; ?>
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation mdl-layout--large-screen-only">
+          <?php if (frontController::logged()) : ?>
+            <!-- Lien vers les outils de développement -->
+            <?php if (frontController::haveRight('admin', 'ALL') and developController::isActivated()) : ?>
+              <a id="developTools" href="/develop" class="mdl-button mdl-js-button mdl-button--icon mdl-color--grey-100 mdl-js-ripple-effect" style="margin: 10px;">
+                <i class="material-icons mdl-color-text--orange">developer_board</i>
+              </a>
+              <div class="mdl-tooltip" data-mdl-for="developTools">Developer Tools</div>
+            <?php endif; ?>
+
+            <!-- Lien vers la configuration utilisateur -->
+            <a id="userConfig" href="/auth/manage/<?= frontController::getSession('userid') ?>" class="mdl-button mdl-js-button mdl-button--icon mdl-color--grey-100 mdl-js-ripple-effect" style="margin: 10px;">
+              <i class="material-icons mdl-color-text--purple">account_circle</i>
+            </a>
+            <div class="mdl-tooltip" data-mdl-for="userConfig"><?= $this->getVerifyTranslate($translate, 'tooltipUserConfig') ?></div>
+
+            <!-- Lien vers la liste des utilisateur -->
+            <?php if (frontController::haveRight('moderator', 'None')) : ?>
+              <a id="userList" href="/auth/system/" class="mdl-button mdl-js-button mdl-button--icon mdl-color--grey-100 mdl-js-ripple-effect" style="margin: 10px;">
+                <i class="material-icons mdl-color-text--black">folder_shared</i>
+              </a>
+              <div class="mdl-tooltip" data-mdl-for="userList"><?= $this->getVerifyTranslate($translate, 'tooltipUserList') ?></div>
+            <?php endif; ?>
+
+            <!-- Bouton d'aide pour les manuels -->
+            <button id="button_manuals_id" class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect mdl-color--grey-100 button_manuals" style="margin: 10px;">
+              <i class="material-icons  mdl-color-text--green">library_books</i>
+            </button>
+            <div class="mdl-tooltip" data-mdl-for="button_manuals_id"><?= $this->getVerifyTranslate($translate, 'tooltipManuals') ?></div>
+
+            <!-- Lien vers le système de déconnexion -->
+            <p id="Ghost" class="mdl-navigation__link mdl-color-text--grey-200 mdl-color-text--white"><?= frontController::getSession('nomPrenom') ?></p>
+            <label class="title goodyear-color-text"><?= $this->getVerifyTranslate($translate, 'tooltipDisconnect') ?></label>
+            <a id="disconnect" href="/auth/logout/" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon goodyear-color-text">
+              <i class="material-icons">power_settings_new</i>
+            </a>
+            <div class="mdl-tooltip" data-mdl-for="disconnect"><?= $this->getVerifyTranslate($translate, 'tooltipDisconnect') ?></div>
+          <?php endif; ?>
+
+          <!-- Ajout des drapeaux pour changer la langue de l'application -->
+          <button id="flags-lower-right" class="mdl-button mdl-js-button mdl-button--icon" style="margin: 10px;">
+            <i class="material-icons goodyear-color-text">flags</i>
+          </button>
+
+          <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="flags-lower-right">
+            <li class="mdl-menu__item languageButton" data-lang="fr">
+              <img style="height:100%;" src="/img/flags/FR.png" /> French
+            </li>
+            <li class="mdl-menu__item languageButton" data-lang="en">
+              <img style="height:100%;" src="/img/flags/US.png" /> English
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Menu sur la gauche pour les liens -->
+    <?php if (frontController::logged() || frontController::DISABLE_LOGIN) : ?>
+      <div class="mdl-layout__drawer">
+        <span class="mdl-layout-title goodyear-color-text goodyear-color--light title"><?= $this->getVerifyTranslate($translateHeaderList, 'mainLink') ?></span>
+        <nav class="mdl-navigation">
+          <a class="mdl-navigation__link" href="/"><?= $this->getVerifyTranslate($translateHeaderList, 'home') ?></a>
+          <a class="mdl-navigation__link button_manuals cursorHand"><?= $this->getVerifyTranslate($translateHeaderList, 'manual') ?></a>
+          <a class="mdl-navigation__link" href="/auth/manage/<?= frontController::getSession('userid') ?>"><?= $this->getVerifyTranslate($translateHeaderList, 'userParameters') ?></a>
+          <a class="mdl-navigation__link" href="/auth/logout/"><?= $this->getVerifyTranslate($translateHeaderList, 'disconnect') ?></a>
+        </nav>
+
+        <?php if (isset($headerList[$currentApp])) : ?>
+          <span class="mdl-layout-title goodyear-color-text goodyear-color--light title"><?= $translateHeaderList[$currentApp] ?></span>
+          <nav class="mdl-navigation">
+          <?php foreach ($headerList[$currentApp] as $data => $link) : ?>
+            <a class="mdl-navigation__link" href="<?= $link ?>"><?= $this->getVerifyTranslate($translateHeaderList, $data) ?></a>
+          <?php endforeach; ?>
+          </nav>
+        <?php endif; ?>
+
+        <?php if (frontController::haveRight('moderator', 'None')) : ?>
+          <span class="mdl-layout-title goodyear-color-text goodyear-color--light title"><?= $this->getVerifyTranslate($translateHeaderList, 'moderatorLink') ?></span>
+          <nav class="mdl-navigation">
+            <a class="mdl-navigation__link" href="/auth/system/"><?= $this->getVerifyTranslate($translateHeaderList, 'userSystem') ?></a>
+          </nav>
+        <?php endif; ?>
+
+        <?php if (frontController::haveRight('admin', 'ALL') and developController::isActivated()) : ?>
+          <span class="mdl-layout-title goodyear-color-text goodyear-color--light title">Development</span>
+          <nav class="mdl-navigation">
+            <a class="mdl-navigation__link" href="/develop">Development Tools</a>
+          </nav>
+        <?php endif; ?>
+      </div>
+    <?php endif; ?>
+
+    <!-- Scripts JS -->
+    <?php if (frontController::logged() || frontController::DISABLE_LOGIN) : ?>
+      <script src="/js/ajax.js"></script>
+      <script type="text/javascript">
+        // Système pour changer la langue de l'application
+        document.querySelectorAll('.languageButton').forEach(function(button) {
+          button.addEventListener('click', function() {
+            window.location.replace('/index/language/' + button.dataset.lang);
+          });
+        });
+
+        // Système pour récupérer les manuels disponibles
+        document.querySelectorAll('.button_manuals').forEach(function(button) {
+          button.addEventListener('click', function() {
+            swal({
+              icon: 'success',
+              title: "<?= $this->getVerifyTranslate($translate, 'manualTitle') ?>",
+              text: "<?= $this->getVerifyTranslate($translate, 'manualText') ?>",
+              buttons: {
+                <?php if (frontController::haveRight('admin', 'All')) : ?>
+                  developer: {
+                    text: "<?= $this->getVerifyTranslate($translate, 'manualDeveloperText') ?>",
+                    className: 'developerManualButton',
+                  },
+                <?php endif; ?>
+                <?php if (frontController::haveRight('moderator', 'None')) : ?>
+                  moderatorAdmin: {
+                    text: "<?= $this->getVerifyTranslate($translate, 'manualModeratorAdminText') ?>",
+                    className: 'moderatorAdminManualButton',
+                  },
+                <?php endif; ?>
+                user: {
+                  text: "<?= $this->getVerifyTranslate($translate, 'manualUserText') ?>",
+                  className: 'userManualButton',
+                },
+              },
+            }).then((value) => {
+              switch (value) {
+                case 'user':
+                  window.open('/manuals/User_Manual.pdf');
+                  break;
+
+                case 'moderatorAdmin':
+                  window.open('/manuals/Moderator_Administrator_Manual.pdf');
+                  break;
+
+                case 'developer':
+                  window.open('/manuals/Developer_Manual.pdf');
+                  break;
+              }
+            });
+          });
+        });
+
+        // Ajout d'une touche du développeur
+        document.querySelector('#Ghost').addEventListener('click', function() {
+          swal({
+            icon: 'info',
+            title: "Crédits",
+            text: "De l'Analyse, de la Gestion, de la Communication et beaucoup de Travail\n\nDebuigny Léo",
+          }).then(function() {
+            swal({
+              icon: 'success',
+              title: "Merci",
+              text: "Bon Courage !",
+            });
+          });
+        });
+      </script>
+    <?php endif; ?>
+
+    <!-- Contenu -->
+    <main class="mdl-layout__content">
+      <div class="page-content mdl-grid">

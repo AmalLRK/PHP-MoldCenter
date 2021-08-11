@@ -1,0 +1,211 @@
+<!-- Récupération des données en PHP -->
+<?php
+
+$dataID = $this->getParam('dataID');
+
+$code = $this->getParam('code');
+
+$refSpecs = $this->getParam('refSpecs');
+
+$statusList = $this->getParam('statusList');
+$translateStatusList = $this->getParam('translateStatusList');
+
+
+$dataList = $this->getParam('dataList');
+$translateData = $this->getParam('translateData');
+
+$dataCategoryList = $this->getParam('dataCategoryList');
+$translateDataCategory = $this->getParam('translateDataCategory');
+
+$dataRule = $this->getParam('dataRule');
+
+$translate = $this->getParam('translate');
+
+
+// var_dump($dataID);
+
+// var_dump($code);
+
+// var_dump($statusList);
+// var_dump($translateStatusList);
+
+
+// var_dump($dataList);
+// var_dump($translateData);
+
+// var_dump($dataCategoryList);
+// var_dump($translateDataCategory);
+
+// var_dump($dataRule);
+
+// var_dump($translate);
+
+
+// Outils pour les fonctions nécessaire
+$toolsController = new toolsController();
+
+?>
+
+
+
+<!-- Feuille de style CSS de la page -->
+<style type="text/css">
+  .middle {
+    text-align: center !important;
+  }
+
+  .title {
+    font-weight: bold;
+  }
+</style>
+
+
+
+<!-- Formulaire d'ajout d'un code -->
+<div class="mdl-cell mdl-cell--12-col mdl-card">
+  <!-- Titre du formulaire -->
+  <div class="mdl-card__title goodyear-color--light goodyear-color-text">
+    <h6 class="mdl-card__title-text title"><?= $this->getVerifyTranslate($translate, 'editFormTitle') . ' ' . $dataID ?></h6>
+  </div>
+
+  <!-- Contenu du formulaire -->
+  <form id="edit_form" method="post" action="/code/edit" class="mdl-card__supporting-text mdl-grid">
+    <!-- Ajout de l'identifiant unique du moule -->
+    <input class="hidden" type="text" value="<?= $code['CODE_PROD_1'] ?>" name="CODE_PROD_1">
+    <!-- Affichage des catégorie -->
+    <?php foreach ($dataCategoryList as $categoryBaseName => $color) : ?>
+      <div class="mdl-cell mdl-cell--6-col">
+        <div class="mdl-card mdl-shadow--8dp">
+          <!-- Titre de la catégorie -->
+          <div class="mdl-card__title" style="background-color: #<?= $color ?>; color: <?= $toolsController->autoTextColor('#' . $color) ?>">
+            <h6 class="mdl-card__title-text title"><?= $this->getVerifyTranslate($translateDataCategory, $categoryBaseName) ?></h6>
+          </div>
+
+          <!-- Contenu de la catégorie -->
+          <div class="mdl-card__supporting-text mdl-grid">
+            <?php foreach ($dataList as $dataBaseName => $data) : ?>
+              <?php if ($data['category']['name'] == $categoryBaseName and isset($dataRule[$dataBaseName]['edit'])) : ?>
+                <!-- Définition des saisi pour les champs spéciaux -->
+                <?php switch ($dataBaseName):
+                        default: ?>
+                    <!-- Zone de texte par défaut -->
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--3-col">
+                      <input id="<?= $dataBaseName ?>" class="mdl-textfield__input" type="text" name="<?= $dataBaseName ?>" value="<?= $code[$dataBaseName] ?>">
+                      <label class="mdl-textfield__label"><?= $this->getVerifyTranslate($translateData, $data['name']) ?></label>
+                    </div>
+                    <?php break; ?>
+
+                  <?php
+                        case 'REF_SPEC': ?>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--6-col">
+                      <input required id="<?= $dataBaseName ?>" list="<?= $dataBaseName ?>-datalist" class="mdl-textfield__input" type="text" name="<?= $dataBaseName ?>" value="<?= $code[$dataBaseName] ?>" autocomplete="off">
+                      <datalist id="<?= $dataBaseName ?>-datalist">
+                        <?php foreach ($refSpecs as $spec) : ?>
+                          <option value="<?= $spec['REF_SPEC'] ?>"><?= $spec['REF_SPEC'] ?></option>
+                        <?php endforeach; ?>
+                      </datalist>
+                      <label class="mdl-textfield__label"><?= $this->getVerifyTranslate($translateData, $data['name']) ?></label>
+                    </div>
+                    <?php break; ?>
+
+                  <?php
+                        case 'S_DIAMETRE':
+                        case 'L_DIAMETRE':
+                        case 'JEUX_TOTAL_SECTEUR': ?>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--4-col">
+                      <input id="<?= $dataBaseName ?>" class="mdl-textfield__input" type="text" pattern="[-+]?[0-9]*[.]?[0-9]+" name="<?= $dataBaseName ?>" value="<?= $code[$dataBaseName] ?>">
+                      <label class="mdl-textfield__label"><?= $this->getVerifyTranslate($translateData, $data['name']) ?></label>
+                      <span class="mdl-textfield__error"><?= $this->getVerifyTranslate($translate, 'errorNumberInput') ?></span>
+                    </div>
+                    <?php break; ?>
+
+                  <?php
+                        case 'STATUS': ?>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--6-col">
+                      <select id="<?= $dataBaseName ?>" class="mdl-textfield__input" type="text" name="<?= $dataBaseName ?>">
+                        <?php switch ($dataBaseName):
+                                  case 'STATUS': ?>
+                            <?php foreach ($statusList as $id => $status) : ?>
+                              <option value="<?= $status['TYPE'] ?>" <?= $code[$dataBaseName] == $status['TYPE'] ? 'selected' : '' ?>><?= $this->getVerifyTranslate($translateStatusList, $status['TYPE']) ?></option>
+                            <?php endforeach; ?>
+                            <?php break; ?>
+                          <?php endswitch; ?>
+                      </select>
+                      <label class="mdl-textfield__label" style="top: 1px;"><?= $this->getVerifyTranslate($translateData, $data['name']) ?></label>
+                    </div>
+                    <?php break; ?>
+
+                  <?php
+                        case 'SMARTEAM': ?>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--12-col">
+                      <input id="<?= $dataBaseName ?>" class="mdl-textfield__input" type="datetime-local" name="<?= $dataBaseName ?>" value="<?= $code[$dataBaseName] ? date_create_from_format('d-m-Y H:i:s', $code[$dataBaseName])->format('Y-m-d\TH:i:s') : '' ?>" />
+                      <label class="mdl-textfield__label" style="top: 7px;"><?= $this->getVerifyTranslate($translateData, $data['name']) ?></label>
+                    </div>
+                    <?php break; ?>
+
+                  <?php
+                        case 'PCI': ?>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--3-col">
+                      <select id="<?= $dataBaseName ?>" class="mdl-textfield__input" type="text" name="<?= $dataBaseName ?>">
+                        <option value="Y" <?= $code[$dataBaseName] == 'Y' ? 'selected' : '' ?>><?= $this->getVerifyTranslate($translate, 'pciCodeYes') ?></option>
+                        <option value="" <?= $code[$dataBaseName] == '' ? 'selected' : '' ?>><?= $this->getVerifyTranslate($translate, 'pciCodeNo') ?></option>
+                      </select>
+                      <label class="mdl-textfield__label" style="top: 1px;"><?= $this->getVerifyTranslate($translateData, $data['name']) ?></label>
+                    </div>
+                    <?php break; ?>
+                  <?php endswitch; ?>
+                <?php endif; ?>
+              <?php endforeach; ?>
+          </div>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  </form>
+
+  <!-- Confirmation du formulaire -->
+  <div class="mdl-card__actions mdl-card--border">
+    <button id="button_edit_form" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--green mdl-color-text--white right">
+      <?= $this->getVerifyTranslate($translate, 'buttonEditCode') ?>
+    </button>
+    <div class="mdl-tooltip" for="button_edit_form"><?= $this->getVerifyTranslate($translate, 'buttonEditCode') ?></div>
+    <button id="close_edit_form_button" data-id=<?= $dataID ?> class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--red mdl-color-text--white close">
+      <?= $this->getVerifyTranslate($translate, 'buttonCancel') ?>
+    </button>
+    <div class="mdl-tooltip" for="close_edit_form_button"><?= $this->getVerifyTranslate($translate, 'buttonCancel') ?></div>
+  </div>
+
+  <!-- Fermeture du formulaire -->
+  <div class="mdl-card__menu">
+    <button id="close_edit_form" data-id=<?= $dataID ?> class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color-text--white close">
+      <i class="material-icons">close</i>
+    </button>
+    <div class="mdl-tooltip" for="close_edit_form"><?= $this->getVerifyTranslate($translate, 'buttonCancel') ?></div>
+  </div>
+</div>
+
+
+
+<!-- Ajout des descriptions pour chaque champs -->
+<?php foreach ($dataList as $dataBaseName => $data) : ?>
+  <div class="mdl-tooltip mdl-tooltip--large" for="<?= $dataBaseName ?>"><?= $this->getVerifyTranslate($translateData, $data['description']) ?></div>
+<?php endforeach; ?>
+
+
+
+<!-- Script JavaScript -->
+<script type="text/javascript">
+  // Fermeture du formulaire
+  document.querySelectorAll('.close').forEach(function(button) {
+    button.addEventListener('click', function() {
+      window.location.replace('/code/advancedView/' + button.dataset.id);
+    });
+  });
+
+  // Confirmation du formulaire
+  document.querySelector('#button_edit_form').addEventListener('click', function() {
+    var form = document.querySelector('#edit_form');
+
+    if (form.reportValidity())
+      form.submit();
+  });
+</script>

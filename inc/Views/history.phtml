@@ -1,0 +1,298 @@
+<!-- Récupération des données en PHP -->
+<?php
+
+$historyList = $this->getParam('historyList');
+$historyColumnList = $this->getParam('historyColumnList');
+
+$translate = $this->getParam('translate');
+
+$translateHistoryTypeList = $this->getParam('translateHistoryTypeList');
+
+$appBaseName = $this->getParam('appBaseName');
+$pageList = $this->getParam('pageList');
+$translateIndexList = $this->getParam('translateIndexList');
+
+$datalist = $this->getParam('datalist');
+$translateDataList = $this->getParam('translateDataList');
+
+$translateStatusList = $this->getParam('translateStatusList');
+
+$translateLocationTypeList = $this->getParam('translateLocationTypeList');
+
+$sort = $this->getParam('sort');
+
+$dataID = $this->getParam('dataID');
+
+
+// var_dump($historyList);
+// var_dump($historyColumnList);
+
+// var_dump($translate);
+
+// var_dump($translateHistoryTypeList);
+
+// var_dump($appBaseName);
+// var_dump($pageList);
+// var_dump($translateIndexList);
+
+// var_dump($datalist);
+// var_dump($translateDataList);
+
+// var_dump($translateStatusList);
+
+// var_dump($sort);
+
+// var_dump($dataID);
+
+?>
+
+
+
+<!-- Chargement des librairies JS et de la feuille de style CSS pour la page -->
+<link rel="stylesheet" href="/js/TableSort/tablesort.css" />
+<script type="text/javascript" src="/js/TableSort/tablesort.min.js"></script>
+<script type="text/javascript" src="/js/TableSort/sorts/tablesort.number.min.js"></script>
+<script type="text/javascript" src="/js/jets.min.js"></script>
+
+
+
+<!-- Feuille de style CSS de la page -->
+<style type="text/css">
+  .middle {
+    text-align: center !important;
+  }
+
+  .title {
+    font-weight: bold;
+  }
+
+  .full {
+    width: 100%;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  .cursorHand {
+    cursor: pointer;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  .inner {
+    overflow-x: scroll;
+    overflow-y: visible;
+    width: 100%;
+  }
+
+  .right {
+    text-align: right;
+  }
+</style>
+
+
+
+<!-- Page Principal -->
+<div class="mdl-card mdl-shadow--8dp full">
+  <!-- Titre principal -->
+  <div class="mdl-card__title goodyear-color--light goodyear-color-text">
+    <h6 class="mdl-card__title-text title"><?= $this->getVerifyTranslate($translate, 'historyTitle') . ' ' . $this->getVerifyTranslate($translateIndexList, $pageList[$appBaseName]['name']) . ' ' . $dataID ?></h6>
+
+    <!-- Système de recherche global -->
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable" style="padding: 0px; margin: auto;">
+      <label id="search_label" class="mdl-button mdl-js-button mdl-button--icon" style="top: 0px;" for="search">
+        <i class="material-icons goodyear-color-text">search</i>
+      </label>
+      <div class="mdl-tooltip" for="search_label"><?= $this->getVerifyTranslate($translate, 'searchToolTip') ?></div>
+      <div class="mdl-textfield__expandable-holder">
+        <input type="text" id="search" class="mdl-textfield__input goodyear-color-text" style="border-bottom-color: #FFDE00;">
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenu de la page -->
+  <div class="mdl-card__supporting-text mdl-grid">
+    <!-- Système de filtre avec le choix de la plage de date -->
+    <div class="mdl-cell mdl-cell--2-col"></div>
+    <div class="mdl-cell mdl-cell--8-col mdl-card mdl-shadow--2dp">
+      <form method="GET" action="/history/view/<?= $appBaseName . ($dataID != '' ? '/' . $dataID : '') ?>" class="sort-content">
+        <div class="mdl-card__title goodyear-color--light goodyear-color-text">
+          <h6 class="mdl-card__title-text"><?= $this->getVerifyTranslate($translate, 'filterTitle') ?></h6>
+        </div>
+        <div class="mdl-card__supporting-text mdl-grid">
+          <div class="mdl-cell mdl-cell--6-col middle">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input class="mdl-textfield__input" type="date" name="min_date" value="<?= date_create_from_format('d/m/Y', $sort['MIN_DATE'])->format('Y-m-d') ?>" />
+              <label class="mdl-textfield__label" style="top: 7px;"><?= $this->getVerifyTranslate($translate, 'minDateTitle') ?></label>
+            </div>
+          </div>
+          <div class="mdl-cell mdl-cell--6-col middle">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input class="mdl-textfield__input" type="date" name="max_date" value="<?= date_create_from_format('d/m/Y', $sort['MAX_DATE'])->format('Y-m-d') ?>" />
+              <label class="mdl-textfield__label" style="top: 7px;"><?= $this->getVerifyTranslate($translate, 'maxDateTitle') ?></label>
+            </div>
+          </div>
+        </div>
+        <div class="mdl-card__actions mdl-card--border right">
+          <input type="submit" value="<?= $this->getVerifyTranslate($translate, 'buttonFilter') ?>" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--green mdl-color-text--white right" />
+        </div>
+      </form>
+    </div>
+    <div class="mdl-cell mdl-cell--2-col"></div>
+
+    <!-- Tableau des enregistrements -->
+    <div class=" mdl-cell mdl-cell--12-col inner">
+      <table id="historyTab" class="mdl-data-table mdl-js-data-table">
+        <!-- Entête du tableau -->
+        <?php
+          $columnsNumber = 0;
+          $columns = array();
+        ?>
+        <thead>
+          <!-- Barres de recherche sélectives -->
+          <tr style="text-align = center;">
+            <?php foreach ($historyColumnList as $columnBaseName => $value) : ?>
+              <?php $columns[$columnBaseName] = $columnsNumber; ?>
+              <th class="goodyear-color--light" style="text-align: center;">
+                <!-- Système de recherche sélectif -->
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable" style="padding: 0px; margin: auto; width: 200px;">
+                  <label id="search_label-<?= $columnBaseName ?>" class="mdl-button mdl-js-button mdl-button--icon" style="top: 0px;" for="search-<?= $columnBaseName ?>">
+                    <i class="material-icons goodyear-color-text">search</i>
+                  </label>
+                  <div class="mdl-tooltip" for="search_label-<?= $columnBaseName ?>"><?= $this->getVerifyTranslate($translate, 'searchToolTip') ?></div>
+                  <div class="mdl-textfield__expandable-holder head-search">
+                    <input type="text" id="search-<?= $columnBaseName ?>" class="mdl-textfield__input goodyear-color-text" style="border-bottom-color: #FFDE00;">
+                  </div>
+                </div>
+              </th>
+              <?php $columnsNumber += 1; ?>
+            <?php endforeach; ?>
+          </tr>
+
+          <!-- Nom des colonnes -->
+          <tr>
+            <!-- Ajout des noms de chaque colonne -->
+            <?php foreach ($historyColumnList as $columnBaseName => $value) : ?>
+              <th class="mdl-data-table__cell--non-numeric goodyear-color--light goodyear-color-text middle"><?= $this->getVerifyTranslate($translate, $columnBaseName) ?></th>
+            <?php endforeach; ?>
+          </tr>
+        </thead>
+
+        <!-- Contenu du tableau -->
+        <tbody id="content">
+          <!-- Affichage de chaque enregistrement -->
+          <?php foreach ($historyList as $key => $historyData) : ?>
+            <tr>
+              <!-- Affichage de chaque donnée de l'enregistrement -->
+              <td data-id="<?= $historyData['ID_DATA'] ?>" class="mdl-data-table__cell--non-numeric middle"><?= $historyData['ID_DATA'] ?></td>
+              <td data-id="<?= $historyData['ID_DATA'] ?>" class="mdl-data-table__cell--non-numeric middle"><?= $historyData['DATETIME'] ?></td>
+              <td data-id="<?= $historyData['ID_DATA'] ?>" class="mdl-data-table__cell--non-numeric middle"><?= $this->getVerifyTranslate($translateHistoryTypeList, $historyData['TYPE']) ?></td>
+              <td data-id="<?= $historyData['ID_DATA'] ?>" class="mdl-data-table__cell--non-numeric middle"><?= $this->getVerifyTranslate($translateDataList, $datalist[$historyData['DATA_BASE_NAME']]['name']) ?></td>
+              <?php if ($appBaseName == 'Mold_App' and $historyData['DATA_BASE_NAME'] == 'STATUT' and $historyData['NEW_VALUE'] != '') : ?>
+                <td data-id="<?= $historyData['ID_DATA'] ?>" class="mdl-data-table__cell--non-numeric middle"><?= $this->getVerifyTranslate($translateStatusList, $historyData['NEW_VALUE']) ?></td>
+              <?php elseif ($appBaseName == 'Mold_App' and $historyData['DATA_BASE_NAME'] == 'LOCATION_TYPE' and $historyData['NEW_VALUE'] != '') : ?>
+                <td data-id="<?= $historyData['ID_DATA'] ?>" class="mdl-data-table__cell--non-numeric middle"><?= $this->getVerifyTranslate($translateLocationTypeList, $historyData['NEW_VALUE']) ?></td>
+              <?php elseif ($appBaseName == 'Code_App' and $historyData['DATA_BASE_NAME'] == 'STATUS' and $historyData['NEW_VALUE'] != '') : ?>
+                <td data-id="<?= $historyData['ID_DATA'] ?>" class="mdl-data-table__cell--non-numeric middle"><?= $this->getVerifyTranslate($translateStatusList, $historyData['NEW_VALUE']) ?></td>
+              <?php else : ?>
+                <td data-id="<?= $historyData['ID_DATA'] ?>" class="mdl-data-table__cell--non-numeric middle"><?= $historyData['NEW_VALUE'] ?></td>
+              <?php endif; ?>
+              <td data-id="<?= $historyData['ID_DATA'] ?>" class="mdl-data-table__cell--non-numeric middle"><?= $historyData['USERID'] ?></td>
+              <td data-id="<?= $historyData['ID_DATA'] ?>" class="mdl-data-table__cell--non-numeric middle"><?= $historyData['NOMPRE'] ?></td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Bouton d'exportation en haut -->
+  <div class="mdl-card__menu">
+    <!-- Bouton d'exportation de l'historique -->
+    <button id="button_export" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--orange-500 mdl-color-text--white" style='margin-right: 10px; background-color: #4e94c7;'>
+      <i class="material-icons">save</i>
+      <div class="mdl-tooltip" for="button_export"><?= $this->getVerifyTranslate($translate, 'exportToolTip') ?></div>
+    </button>
+
+    <!-- Fermeture de l'affichage en haut -->
+    <?php if ($dataID != '') : ?>
+      <button id="close_view_dialog" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color-text--white close">
+        <i class="material-icons">close</i>
+      </button>
+      <div class="mdl-tooltip" for="close_view_dialog"><?= $this->getVerifyTranslate($translate, 'buttonClose') ?></div>
+    <?php endif; ?>
+  </div>
+
+  <!-- fermeture de l'affichage en bas -->
+  <?php if ($dataID != '') : ?>
+    <div class="mdl-card__actions mdl-card--border">
+      <button id="close_view_dialog_button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--purple mdl-color-text--white close right">
+        <?= $this->getVerifyTranslate($translate, 'buttonClose') ?>
+      </button>
+      <div class="mdl-tooltip" for="close_view_dialog_button"><?= $this->getVerifyTranslate($translate, 'buttonClose') ?></div>
+    </div>
+  <?php endif; ?>
+</div>
+
+
+
+<!-- Script JavaScript -->
+<script type="text/javascript">
+  // Ajout du système de trie automatique du tableau
+  new Tablesort(document.querySelector('#historyTab'));
+
+
+
+  // Ajout du système pour afficher le formulaire d'exportation
+  document.querySelector('#button_export').addEventListener('click', function(button) {
+    swal({
+      title: "<?= $this->getVerifyTranslate($translate, 'exportFormTitle') ?>",
+      text: "<?= $this->getVerifyTranslate($translate, 'exportFormText') ?>",
+      icon: "info",
+      buttons: true,
+    }).then((button) => {
+      if (button) {
+        swal({
+          title: "<?= $this->getVerifyTranslate($translate, 'exportFormSuccessTitle') ?>",
+          icon: "success",
+        }).then(function() {
+          window.open('/history/export/' + '<?= $appBaseName ?>')
+        });
+      }
+    });
+  });
+
+  // Moteur de recherche
+  var searchEngine = new Jets({
+    contentTag: '#content',
+    callSearchManually: true,
+    searchInSpecificColumn: true
+  });
+
+  // Système de recherche global
+  document.querySelector('#search').addEventListener('input', function() {
+    searchEngine.search(document.querySelector('#search').value);
+  });
+
+  // Système de recherche sélectif -->
+  <?php foreach ($historyColumnList as $columnBaseName => $value) : ?>
+    document.querySelector('#search-<?= $columnBaseName ?>').addEventListener('input', function() {
+      searchEngine.search(document.querySelector('#search-<?= $columnBaseName ?>').value, <?= $columns[$columnBaseName] ?>);
+    });
+  <?php endforeach; ?>
+
+
+
+  // Fermeture automatique des formulaires
+  document.querySelectorAll('.close').forEach(
+    function(elm) {
+      elm.addEventListener('click', function() {
+        // Fermeture de la visualisation
+        window.close();
+      });
+    }
+  );
+</script>

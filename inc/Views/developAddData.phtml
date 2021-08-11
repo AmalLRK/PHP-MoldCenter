@@ -1,0 +1,99 @@
+<!-- Récupération des données en PHP -->
+<?php
+
+$dataCategoryList = $this->getParam('dataCategoryList');
+
+// var_dump($dataCategoryList);
+
+?>
+
+
+
+<!-- Feuille de style CSS de la page -->
+<style type="text/css">
+  .full {
+    width: 100%;
+  }
+
+  .middle {
+    text-align: center !important;
+  }
+
+  .title {
+    font-weight: bold;
+  }
+</style>
+
+
+
+<!-- Page Principal -->
+<div class="mdl-cell mdl-cell--3-col"></div>
+<div class="mdl-cell mdl-cell--6-col">
+  <div class="mdl-card mdl-shadow--8dp full">
+    <div class="mdl-card__title goodyear-color-text goodyear-color--light">
+      <h6 class="mdl-card__title-text title">Add Data</h6>
+    </div>
+
+    <div class="mdl-card__supporting-text">
+      <form class="mdl-grid" id="dataForm" method="POST" action="/develop/addData">
+        <!-- Champ pour choisir le nom de l'application -->
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--3-col">
+          <input class="mdl-textfield__input" type="text" id="appName" name="appName">
+          <label class="mdl-textfield__label" for="appName">App Name</label>
+        </div>
+
+        <!-- Champ pour choisir le nom de la donnée en base -->
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--3-col">
+          <input class="mdl-textfield__input" type="text" id="baseName" name="baseName">
+          <label class="mdl-textfield__label" for="baseName">DataBase Name</label>
+        </div>
+
+        <!-- Champ pour choisir le nom de la donnée -->
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--3-col">
+          <input class="mdl-textfield__input" type="text" id="name" name="name">
+          <label class="mdl-textfield__label" for="name">Data Name</label>
+        </div>
+
+        <!-- Champ pour choisir la description de la donnée -->
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--3-col">
+          <input class="mdl-textfield__input" type="text" id="description" name="description">
+          <label class="mdl-textfield__label" for="description">Data Description</label>
+        </div>
+
+        <!-- Champ pour choisir la catégorie de la donnée -->
+        <div class="mdl-cell mdl-cell--3-col"></div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--6-col">
+          <select id="categoryName" class="mdl-textfield__input full" type="text" name="categoryName">
+            <?php foreach ($dataCategoryList as $categoryBaseName => $color) : ?>
+              <option value="<?= $categoryBaseName ?>"><?= $categoryBaseName ?></option>
+            <?php endforeach; ?>
+          </select>
+          <label class="mdl-textfield__label" style="top: 1px;">Data Category</label>
+        </div>
+        <div class="mdl-cell mdl-cell--3-col"></div>
+      </form>
+    </div>
+
+    <div class="mdl-card__actions mdl-card--border middle">
+      <!-- Bouton de sauvegarde -->
+      <button type="button" id="add" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--green mdl-color-text--white">
+        Add
+      </button>
+      <div class="mdl-tooltip" for="add">Add Data</div>
+    </div>
+  </div>
+</div>
+<div class="mdl-cell mdl-cell--3-col"></div>
+
+
+
+<!-- Script JavaScript -->
+<script type="text/javascript">
+  // Validation et envoi du formulaire
+  document.querySelector('#add').addEventListener('click', function() {
+    var form = document.querySelector('#dataForm');
+
+    if (form.reportValidity())
+      form.submit();
+  });
+</script>

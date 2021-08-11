@@ -1,0 +1,155 @@
+<!-- Récupération des données en PHP -->
+<?php
+
+$moldNbStatusList = $this->getParam('moldNbStatusList');
+$translateStatusList = $this->getParam('translateStatusList');
+
+$moldNbLocationList = $this->getParam('moldNbLocationList');
+$translateLocationTypeList = $this->getParam('translateLocationTypeList');
+
+$dataList = $this->getParam('dataList');
+
+$dataCategoryList = $this->getParam('dataCategoryList');
+
+$translateData = $this->getParam('translateData');
+$translateDataCategory = $this->getParam('translateDataCategory');
+
+$translate = $this->getParam('translate');
+
+
+// var_dump($moldNbStatusList);
+// var_dump($translateStatusList);
+
+// var_dump($moldNbLocationList);
+// var_dump($translateLocationTypeList);
+
+// var_dump($dataList);
+
+// var_dump($dataCategoryList);
+
+// var_dump($translateData);
+// var_dump($translateDataCategory);
+
+// var_dump($translate);
+
+?>
+
+
+
+<!-- Chargement des librairies JS et de la feuille de style CSS pour la page -->
+<script type="text/javascript" src="/js/moment.js"></script>
+<link rel="stylesheet" href="/js/ChartJS/Chart.min.css" />
+<script type="text/javascript" src="/js/ChartJS/Chart.min.js"></script>
+
+
+
+<!-- Feuille de style CSS de la page -->
+<style type="text/css">
+  .full {
+    width: 100%;
+  }
+
+  .middle {
+    text-align: center !important;
+  }
+
+  .title {
+    font-weight: bold;
+  }
+</style>
+
+
+
+<!-- Page Principal -->
+<div class="mdl-grid full">
+  <div class="mdl-cell mdl-cell--6-col">
+    <!-- Graphique des statuts -->
+    <canvas id="statusAnalyse"></canvas>
+  </div>
+  <div class="mdl-cell mdl-cell--6-col">
+    <!-- Graphique des localisations -->
+    <canvas id="locationAnalyse"></canvas>
+  </div>
+</div>
+
+
+
+<!-- Script JavaScript -->
+<script type="text/javascript">
+  // Fonction qui permet de convertir la couleur au bon format
+  function hexToRGB(hex, alpha) {
+    var r = parseInt(hex.slice(1, 3), 16),
+      g = parseInt(hex.slice(3, 5), 16),
+      b = parseInt(hex.slice(5, 7), 16);
+
+    if (alpha) {
+      return "rgba(" + r + ", " + g + ", " + b + ", " + alpha + ")";
+    } else {
+      return "rgb(" + r + ", " + g + ", " + b + ")";
+    }
+  }
+
+
+
+  // Affichage du graphique des statuts
+  new Chart(
+    document.querySelector('#statusAnalyse'), {
+      type: 'bar',
+      data: {
+        labels: ['<?= $this->getVerifyTranslate($translateData, 'statutName') ?>'],
+        datasets: [
+          <?php foreach ($moldNbStatusList as $id => $nbStatus) : ?> {
+              label: '<?= $this->getVerifyTranslate($translateStatusList, $nbStatus['TYPE']) ?>',
+              data: [<?= $nbStatus['NB'] ?>],
+              backgroundColor: [hexToRGB('#<?= $nbStatus['COLOR'] ?>' , 0.2)],
+              borderColor: [hexToRGB('#<?= $nbStatus['COLOR'] ?>' , 0.8)],
+              borderWidth: 1
+            }
+            <?= $id >= count($moldNbStatusList) - 1 ? ' ' : ',' ?>
+          <?php endforeach; ?>
+        ]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
+    }
+  );
+
+
+
+  // Affichage du graphique des localisations
+  new Chart(
+    document.querySelector('#locationAnalyse'), {
+      type: 'bar',
+      data: {
+        labels: ['<?= $this->getVerifyTranslate($translateData, 'locationName') ?>'],
+        datasets: [
+          <?php foreach ($moldNbLocationList as $id => $nbLocation) : ?> {
+              label: '<?= $this->getVerifyTranslate($translateLocationTypeList, $nbLocation['TYPE']) ?>',
+              data: [<?= $nbLocation['NB'] ?>],
+              backgroundColor: [hexToRGB('#<?= $nbLocation['COLOR'] ?>' , 0.2)],
+              borderColor: [hexToRGB('#<?= $nbLocation['COLOR'] ?>' , 0.8)],
+              borderWidth: 1
+            }
+            <?= $id >= count($moldNbStatusList) - 1 ? ' ' : ',' ?>
+          <?php endforeach; ?>
+        ]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
+    }
+  );
+</script>

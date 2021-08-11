@@ -1,0 +1,57 @@
+@page {size: landscape;margin:0;}
+
+/*form {display:none;}
+.mdl-layout__header{display:none;}
+.mdl-card__supporting-text{padding:0px;}
+h5{display:none;}
+
+.mdl-card__title{font-size: 16px; font-weight: bolder}
+
+.mdl-tabs__tab-bar{display:none;}
+
+.filterCard{display:none;}
+.printingFooter{margin-left:20px;}
+*/
+
+	body * {
+		visibility: hidden;
+
+	}
+	a{text-decoration: none;color: white!important;}
+	.mdl-layout__header, .mdl-layout__drawer, .mdl-layout__drawer-right{display:none;}
+	.printable, .printable * {
+		visibility: visible;
+		position: relative;
+	}
+	.mdl-card {display: none;}
+	.mdl-card.printable {
+		display: block;
+		
+		top:0;
+		margin: 0 auto;
+		margin-top:15px;
+		white-space: normal;
+		width:286mm;
+		border:1px solid rgba(0,0,0,.4);
+		
+		
+		
+	}
+	.mdl-layout__container{position:relative;overflow-y: auto;}
+	table {white-space: normal;width:255mm;}
+	.mdl-data-table td{padding:12px 10px;}
+	.mdl-data-table th {padding: 0 10px 12px 10px;}
+	.listAldPin{display: none;}
+
+	/* Stat POLES */
+	div.poles:not(.printable){display:none;}
+	#graphPoleCISAbsAutres .mdl-grid, #graphPoleCISAbs .mdl-grid{padding:8px 0;margin: 0;width: 100%; position: relative;}
+	/*#graphPoleCISAbsAutres .mdl-grid .viesocial, #graphPoleCISAbs .mdl-grid .conges {position: absolute;left:0;}
+	#graphPoleCISAbsAutres .mdl-grid .autres, #graphPoleCISAbs .mdl-grid .maladies {position: absolute;right:0;}*/
+	.printingFooter{position: absolute;bottom: 10px;left:10px;}
+
+	/* Stat MPR */
+	.mdl-tabs{padding:0;}
+	.mdl-tabs__tab{display:none;}
+	.printable .mdl-tabs__tab.is-active{font-weight: 600;display: block;position: relative;left: 0;}
+
